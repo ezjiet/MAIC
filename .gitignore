@@ -1,12 +1,29 @@
+# Python
 .venv/
-.env
 __pycache__/
 *.pyc
+
+# Environment variables
+.env*
+!.env.example
+!.env.local.example
+
+# AI / RAG data
 data/raw/
 data/chunks/
 data/forms/
 qdrant_storage/
 models/
-.vscode/
+
+# Next.js / Node.js
 web/node_modules/
 web/.next/
+web/out/
+*.tsbuildinfo
+npm-debug.log*
+
+# Editor
+.vscode/
+
+# macOS
+.DS_Store
