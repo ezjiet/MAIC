@@ -37,6 +37,7 @@ export function Dashboard() {
       const storedChats = getChats();
       const storedActiveChatId = getLatestActiveChatId();
       const activeChat = storedChats.find((chat) => chat.id === storedActiveChatId) ?? storedChats[0];
+      if (new URLSearchParams(window.location.search).get("view") === "history") setView("history");
       setChats(storedChats);
       setSavedAnswers(getSavedAnswers());
       if (activeChat) {
