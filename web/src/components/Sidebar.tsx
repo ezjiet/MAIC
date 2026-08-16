@@ -13,7 +13,7 @@ const navItems = [
   { label: "About", icon: Info, target: "about" },
 ];
 
-export type NavigationView = "chat" | "history" | "faq";
+export type NavigationView = "chat" | "history" | "saved" | "faq";
 
 export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView: NavigationView; onOpenChat: () => void; onOpenHistory: () => void }) {
   const router = useRouter();
@@ -21,6 +21,7 @@ export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView:
   function navigate(label: string, target: string) {
     if (label === "Chat") onOpenChat();
     else if (label === "History") onOpenHistory();
+    else if (label === "Saved") router.push("/saved");
     else if (label === "FAQ") router.push("/faq");
     else {
       const section = document.getElementById(target);

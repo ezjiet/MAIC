@@ -27,6 +27,7 @@ export function MobileNavigation({ activeView, onOpenChat, onOpenHistory }: { ac
   function navigate(label: string, target: string) {
     if (label === "Chat") onOpenChat();
     else if (label === "History") onOpenHistory();
+    else if (label === "Saved") router.push("/saved");
     else if (label === "FAQ") router.push("/faq");
     else {
       const section = document.getElementById(target);
