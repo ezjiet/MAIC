@@ -11,7 +11,7 @@ const mobileNav = [
   { label: "Saved", target: "saved", icon: Bookmark },
   { label: "FAQ", target: "faq", icon: CircleHelp },
   { label: "About", target: "about", icon: Info },
-];
+] satisfies ReadonlyArray<{ label: string; target: NavigationView; icon: typeof MessageSquareText }>;
 
 export function MobileHeader() {
   return (
@@ -24,7 +24,7 @@ export function MobileHeader() {
 export function MobileNavigation({ activeView, onOpenChat, onOpenHistory }: { activeView: NavigationView; onOpenChat: () => void; onOpenHistory: () => void }) {
   const router = useRouter();
 
-  function navigate(label: string, target: string) {
+  function navigate(label: string, target: NavigationView) {
     if (label === "Chat") onOpenChat();
     else if (label === "History") onOpenHistory();
     else if (label === "Saved") router.push("/saved");
@@ -41,7 +41,7 @@ export function MobileNavigation({ activeView, onOpenChat, onOpenHistory }: { ac
     <nav aria-label="Mobile navigation" className="mt-4 border-t border-[#e2e8ee] pt-4 lg:hidden">
       <ul className="grid grid-cols-5 gap-1 rounded-xl bg-[#f2f5f7] p-1">
         {mobileNav.map(({ label, target, icon: Icon }) => {
-          const active = activeView.toLocaleLowerCase() === label.toLocaleLowerCase();
+          const active = activeView === target;
           return <li key={label}><button type="button" onClick={() => navigate(label, target)} aria-current={active ? "page" : undefined} className={`flex min-h-10 w-full items-center justify-center gap-1 rounded-lg text-[9px] font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28659c] ${active ? "bg-white text-[#174f83] shadow-sm" : "text-[#6b7a8c]"}`}><Icon className="size-3.5" aria-hidden="true" />{label}</button></li>;
         })}
       </ul>
