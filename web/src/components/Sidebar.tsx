@@ -13,7 +13,7 @@ const navItems = [
   { label: "About", icon: Info, target: "about" },
 ];
 
-export type NavigationView = "chat" | "history" | "saved" | "faq";
+export type NavigationView = "chat" | "history" | "saved" | "faq" | "about";
 
 export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView: NavigationView; onOpenChat: () => void; onOpenHistory: () => void }) {
   const router = useRouter();
@@ -23,6 +23,7 @@ export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView:
     else if (label === "History") onOpenHistory();
     else if (label === "Saved") router.push("/saved");
     else if (label === "FAQ") router.push("/faq");
+    else if (label === "About") router.push("/about");
     else {
       const section = document.getElementById(target);
       if (section) section.scrollIntoView({ behavior: "smooth", block: "nearest" });

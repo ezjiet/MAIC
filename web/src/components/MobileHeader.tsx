@@ -10,7 +10,7 @@ const mobileNav = [
   { label: "History", target: "history", icon: History },
   { label: "Saved", target: "saved", icon: Bookmark },
   { label: "FAQ", target: "faq", icon: CircleHelp },
-  { label: "About", target: "mobile-agencies", icon: Info },
+  { label: "About", target: "about", icon: Info },
 ];
 
 export function MobileHeader() {
@@ -29,6 +29,7 @@ export function MobileNavigation({ activeView, onOpenChat, onOpenHistory }: { ac
     else if (label === "History") onOpenHistory();
     else if (label === "Saved") router.push("/saved");
     else if (label === "FAQ") router.push("/faq");
+    else if (label === "About") router.push("/about");
     else {
       const section = document.getElementById(target);
       if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
