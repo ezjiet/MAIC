@@ -1,6 +1,7 @@
 "use client";
 
-import { Bookmark, History, Info, MessageSquareText } from "lucide-react";
+import { Bookmark, CircleHelp, History, Info, MessageSquareText } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { BrandLockup } from "@/components/BrandLockup";
 import { SupportedAgencies } from "@/components/SupportedAgencies";
 
@@ -8,14 +9,26 @@ const navItems = [
   { label: "Chat", icon: MessageSquareText, target: "chat" },
   { label: "History", icon: History, target: "history" },
   { label: "Saved", icon: Bookmark, target: "saved" },
+  { label: "FAQ", icon: CircleHelp, target: "faq" },
   { label: "About", icon: Info, target: "about" },
 ];
 
-export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView: "chat" | "history"; onOpenChat: () => void; onOpenHistory: () => void }) {
+export type NavigationView = "chat" | "history" | "saved" | "faq" | "about";
+
+export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView: NavigationView; onOpenChat: () => void; onOpenHistory: () => void }) {
+  const router = useRouter();
+
   function navigate(label: string, target: string) {
     if (label === "Chat") onOpenChat();
     else if (label === "History") onOpenHistory();
-    else document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    else if (label === "Saved") router.push("/saved");
+    else if (label === "FAQ") router.push("/faq");
+    else if (label === "About") router.push("/about");
+    else {
+      const section = document.getElementById(target);
+      if (section) section.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      else router.push(`/#${target}`);
+    }
   }
 
   return (
@@ -26,15 +39,18 @@ export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView:
 
       <nav className="mt-4" aria-label="Primary navigation">
         <ul className="space-y-1">
-          {navItems.map(({ label, icon: Icon, target }) => (
-            <li key={label}>
-              <button type="button" onClick={() => navigate(label, target)} aria-current={(activeView === "chat" && label === "Chat") || (activeView === "history" && label === "History") ? "page" : undefined} className={`flex min-h-10 w-full items-center gap-3 rounded-xl px-3 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28659c] ${(activeView === "chat" && label === "Chat") || (activeView === "history" && label === "History") ? "bg-[#eaf2fa] text-[#164f86]" : "text-[#607086] hover:bg-[#f5f7f9] hover:text-[#10243e]"}`}>
-                <Icon className="size-4" aria-hidden="true" />
-                <span>{label}</span>
-                {((activeView === "chat" && label === "Chat") || (activeView === "history" && label === "History")) && <span className="ml-auto h-4 w-1 rounded-full bg-[#28659c]" aria-hidden="true" />}
-              </button>
-            </li>
-          ))}
+          {navItems.map(({ label, icon: Icon, target }) => {
+            const active = activeView.toLocaleLowerCase() === label.toLocaleLowerCase();
+            return (
+              <li key={label}>
+                <button type="button" onClick={() => navigate(label, target)} aria-current={active ? "page" : undefined} className={`flex min-h-10 w-full items-center gap-3 rounded-xl px-3 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28659c] ${active ? "bg-[#eaf2fa] text-[#164f86]" : "text-[#607086] hover:bg-[#f5f7f9] hover:text-[#10243e]"}`}>
+                  <Icon className="size-4" aria-hidden="true" />
+                  <span>{label}</span>
+                  {active && <span className="ml-auto h-4 w-1 rounded-full bg-[#28659c]" aria-hidden="true" />}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 

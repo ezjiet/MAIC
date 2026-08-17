@@ -1,15 +1,7 @@
 import { ArrowRight, Bookmark, Trash2 } from "lucide-react";
 import { AgencyBadge } from "@/components/AgencyBadge";
+import { formatSavedAt } from "@/lib/saved";
 import type { SavedAnswer } from "@/types/clarify";
-
-function formatSavedAt(value: string) {
-  const savedAt = new Date(value);
-  const elapsedMinutes = Math.max(0, Math.floor((Date.now() - savedAt.getTime()) / 60_000));
-  if (elapsedMinutes < 1) return "Saved just now";
-  if (elapsedMinutes < 60) return `Saved ${elapsedMinutes}m ago`;
-  if (savedAt.toDateString() === new Date().toDateString()) return `Saved ${savedAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
-  return `Saved ${savedAt.toLocaleDateString([], { day: "numeric", month: "short" })}`;
-}
 
 export function SavedAnswers({ items, ready, disabled, onOpen, onRemove }: { items: SavedAnswer[]; ready: boolean; disabled: boolean; onOpen: (item: SavedAnswer) => void; onRemove: (messageId: string) => void }) {
   return (

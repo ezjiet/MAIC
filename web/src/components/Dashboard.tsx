@@ -37,13 +37,19 @@ export function Dashboard() {
       const storedChats = getChats();
       const storedActiveChatId = getLatestActiveChatId();
       const activeChat = storedChats.find((chat) => chat.id === storedActiveChatId) ?? storedChats[0];
+      const urlParams = new URLSearchParams(window.location.search);
+      const viewedChat = storedChats.find((chat) => chat.id === urlParams.get("chatId"));
+      if (urlParams.get("view") === "history") setView("history");
       setChats(storedChats);
       setSavedAnswers(getSavedAnswers());
       if (activeChat) {
-        setCurrentChat(activeChat);
         setLatestActiveChatId(activeChat.id);
         setLatestActiveChat(activeChat.id);
       }
+      if (viewedChat) {
+        setCurrentChat(viewedChat);
+        setFocusedMessageId(urlParams.get("messageId"));
+      } else if (activeChat) setCurrentChat(activeChat);
       setStorageReady(true);
     }, 0);
     return () => window.clearTimeout(timer);
