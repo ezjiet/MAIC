@@ -18,7 +18,7 @@ const navItems = [
 export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView: NavigationView; onOpenChat: () => void; onOpenHistory: () => void }) {
   const router = useRouter();
 
-  function navigate(label: string, target: string) {
+  function navigate(label: string, target: NavigationView) {
     if (label === "Chat") onOpenChat();
     else if (label === "History") onOpenHistory();
     else if (label === "Saved") router.push("/saved");
