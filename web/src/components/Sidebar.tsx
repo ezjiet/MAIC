@@ -5,15 +5,15 @@ import { useRouter } from "next/navigation";
 import { BrandLockup } from "@/components/BrandLockup";
 import { SupportedAgencies } from "@/components/SupportedAgencies";
 
+export type NavigationView = "chat" | "history" | "saved" | "faq" | "about";
+
 const navItems = [
   { label: "Chat", icon: MessageSquareText, target: "chat" },
   { label: "History", icon: History, target: "history" },
   { label: "Saved", icon: Bookmark, target: "saved" },
   { label: "FAQ", icon: CircleHelp, target: "faq" },
   { label: "About", icon: Info, target: "about" },
-];
-
-export type NavigationView = "chat" | "history" | "saved" | "faq" | "about";
+] satisfies ReadonlyArray<{ label: string; icon: typeof MessageSquareText; target: NavigationView }>;
 
 export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView: NavigationView; onOpenChat: () => void; onOpenHistory: () => void }) {
   const router = useRouter();
@@ -40,7 +40,7 @@ export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView:
       <nav className="mt-4" aria-label="Primary navigation">
         <ul className="space-y-1">
           {navItems.map(({ label, icon: Icon, target }) => {
-            const active = activeView.toLocaleLowerCase() === label.toLocaleLowerCase();
+            const active = activeView === target;
             return (
               <li key={label}>
                 <button type="button" onClick={() => navigate(label, target)} aria-current={active ? "page" : undefined} className={`flex min-h-10 w-full items-center gap-3 rounded-xl px-3 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28659c] ${active ? "bg-[#eaf2fa] text-[#164f86]" : "text-[#607086] hover:bg-[#f5f7f9] hover:text-[#10243e]"}`}>

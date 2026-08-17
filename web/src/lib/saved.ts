@@ -56,7 +56,13 @@ export function formatSavedAt(value: string) {
 }
 
 function sortBySavedAt(a: SavedAnswer, b: SavedAnswer) {
-  return new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime();
+  const aTime = Date.parse(a.savedAt);
+  const bTime = Date.parse(b.savedAt);
+
+  return (
+    (Number.isFinite(bTime) ? bTime : 0) -
+    (Number.isFinite(aTime) ? aTime : 0)
+  );
 }
 
 // TODO: Future Enhancement - Sync saved answers to backend storage.
