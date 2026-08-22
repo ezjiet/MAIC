@@ -1,0 +1,40 @@
+# Query expansion dictionary for KWSP
+"KWSP":
+  formal: "Kumpulan Wang Simpanan Pekerja"
+  english: "Employees Provident Fund (EPF)"
+  domain: "Agency"
+
+"i-Akaun":
+  formal: "portal ahli i-Akaun"
+  english: "member portal i-Akaun"
+  domain: "Member portal"
+
+"Akaun 1":
+  formal: "Akaun 1 (Akaun Persaraan)"
+  english: "Account 1 (Retirement)"
+  domain: "Accounts"
+
+"Akaun 2":
+  formal: "Akaun 2 (Akaun Sejahtera)"
+  english: "Account 2 (Wellbeing)"
+  domain: "Accounts"
+
+"Akaun Fleksibel":
+  formal: "Akaun Fleksibel"
+  english: "Flexible Account"
+  domain: "Accounts"
+
+"withdraw":
+  formal: "pengeluaran"
+  english: "withdrawal"
+  domain: "Withdrawals"
+
+"caruman":
+  formal: "caruman KWSP"
+  english: "EPF contribution"
+  domain: "Contributions"
+
+"pindah akaun":
+  formal: "pemindahan antara akaun"
+  english: "transfer between accounts"
+  domain: "Accounts"

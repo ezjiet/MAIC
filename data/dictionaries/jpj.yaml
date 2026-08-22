@@ -1,0 +1,45 @@
+# Query expansion dictionary for JPJ
+"JPJ":
+  formal: "Jabatan Pengangkutan Jalan"
+  english: "Road Transport Department"
+  domain: "Agency"
+
+"lesen memandu":
+  formal: "lesen memandu"
+  english: "driving licence"
+  domain: "Licence"
+
+"road tax":
+  formal: "cukai jalan"
+  english: "road tax"
+  domain: "Road tax"
+
+"saman":
+  formal: "notis saman"
+  english: "summons"
+  domain: "Summons"
+
+"pertukaran milikan":
+  formal: "penyata pertukaran milikan kenderaan"
+  english: "vehicle ownership transfer"
+  domain: "Vehicle registration"
+
+"nombor pendaftaran":
+  formal: "nombor pendaftaran kenderaan"
+  english: "vehicle registration number"
+  domain: "Vehicle registration"
+
+"EEV":
+  formal: "Kenderaan Cekap Tenaga (EEV)"
+  english: "Energy Efficient Vehicle"
+  domain: "Vehicle registration"
+
+"VTA":
+  formal: "Vehicle Type Approval (VTA)"
+  english: "Vehicle Type Approval"
+  domain: "Vehicle standards"
+
+"CG":
+  formal: "Carriage Goods (CG)"
+  english: "Carriage Goods licence"
+  domain: "Commercial vehicles"

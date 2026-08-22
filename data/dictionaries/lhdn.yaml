@@ -1,0 +1,52 @@
+# Query expansion dictionary for LHDN
+# Colloquial/Manglish → formal Bahasa + English equivalent
+
+"kena bayar cukai ke tak":
+  formal: "adakah dikenakan cukai"
+  english: "is it taxable"
+  domain: "Tax liability"
+
+"e-Filing tak boleh submit":
+  formal: "tidak dapat mengemukakan melalui e-Filing"
+  english: "unable to submit via e-Filing"
+  domain: "Filing / e-Filing system"
+
+"Borang BE ke Borang B":
+  formal: "Borang BE atau Borang B"
+  english: "Form BE or Form B"
+  domain: "Return forms"
+
+"relief anak":
+  formal: "pelepasan cukai anak"
+  english: "child tax relief"
+  domain: "Tax reliefs"
+
+"PCB potong lebih":
+  formal: "Potongan Cukai Bulanan dipotong berlebihan"
+  english: "Monthly Tax Deduction over-deducted"
+  domain: "PCB / MTD"
+
+"tax clearance letter":
+  formal: "surat penyelesaian cukai (SPC)"
+  english: "Tax Clearance Letter"
+  domain: "Tax Clearance (SPC)"
+
+"CKHT":
+  formal: "Cukai Keuntungan Harta Tanah"
+  english: "Real Property Gains Tax"
+  domain: "RPGT / CKHT"
+
+"LHDN":
+  formal: "Lembaga Hasil Dalam Negeri"
+  english: "Inland Revenue Board"
+  domain: "Agency"
+
+"relief":
+  formal: "pelepasan cukai"
+  english: "tax relief"
+  domain: "Tax reliefs"
+
+"e-Invois":
+  formal: "e-Invois"
+  english: "e-Invoice"
+  domain: "e-Invoice"

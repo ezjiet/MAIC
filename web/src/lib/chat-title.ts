@@ -22,29 +22,6 @@ export function isMeaningfulMessage(message: string) {
 export function generateChatTitle(message: string) {
   const clean = normalizeMessage(message);
   if (!isMeaningfulMessage(clean)) return DEFAULT_CHAT_TITLE;
-
-  const value = clean.toLocaleLowerCase("en-MY");
-  const hasKwsp = /\b(?:kwsp|epf)\b/u.test(value);
-  const hasLhdn = /\b(?:lhdn|hasil)\b/u.test(value);
-  const hasJpj = /\bjpj\b/u.test(value);
-  const hasHouse = /\b(?:house|housing|home|rumah)\b/u.test(value);
-  const hasWithdrawal = /\b(?:withdraw|withdrawal|keluar|pengeluaran)\b/u.test(value);
-  const hasRetirement = /\b(?:retire|retirement|savings?|simpanan|persaraan)\b/u.test(value);
-  const hasTax = /\b(?:tax|taxes|cukai|income)\b/u.test(value);
-  const hasTaxFiling = /\b(?:file|filing|submit|declare|deadline|when|bila)\b/u.test(value);
-  const hasRelief = /\b(?:relief|rebate|deduction|pelepasan)\b/u.test(value);
-  const hasLicence = /\b(?:licence|license|lesen)\b/u.test(value);
-  const hasRenewal = /\b(?:renew|renewal|expired|expire|tamat)\b/u.test(value);
-  const hasRoadTax = /\broad\s*tax\b|\broadtax\b|\bcukai\s+jalan\b/u.test(value);
-
-  if ((hasKwsp || hasWithdrawal) && hasHouse) return "KWSP Housing Withdrawal";
-  if (hasKwsp && hasRetirement) return "KWSP Retirement Savings";
-  if ((hasLhdn || hasTax) && hasRelief) return "LHDN Tax Relief";
-  if (hasRoadTax || (hasJpj && /\broad\b/u.test(value))) return "JPJ Road Tax";
-  if ((hasJpj || hasLicence) && hasLicence && hasRenewal) return "JPJ Licence Renewal";
-  if ((hasLhdn || hasTax) && hasTaxFiling) return "Income Tax Filing";
-  if (hasLhdn || hasTax) return "Income Tax";
-
   return truncateTitle(clean);
 }
 

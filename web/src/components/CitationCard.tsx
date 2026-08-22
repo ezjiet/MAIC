@@ -1,26 +1,29 @@
 import { ExternalLink, FileText } from "lucide-react";
 import type { Citation } from "@/types/clarify";
 
-function dateLabel(value?: string) {
-  if (!value) return "Date not provided";
-  const date = new Date(`${value}T00:00:00`);
-  return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat("en-MY", { day: "numeric", month: "short", year: "numeric" }).format(date);
-}
-
+/**
+ * Compact source pill. Shows the PDF filename and page. Clicking opens the
+ * actual PDF in a new tab, jumping to the cited page.
+ */
 export function CitationCard({ citation }: { citation: Citation }) {
-  return (
-    <article className="rounded-xl border border-[#cfdce8] bg-[#f6f9fc] p-3">
-      <div className="flex items-start gap-3">
-        <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white text-[#2b65a5] shadow-sm"><FileText className="size-4" aria-hidden="true" /></span>
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#6e7c8e]">Official source</p>
-          <h4 className="mt-0.5 text-[13px] font-bold text-[#10243e]">{citation.document_title}</h4>
-          <p className="mt-1 text-[11px] text-[#65758a]">{citation.clause} · Effective: {dateLabel(citation.effective_date)}</p>
-        </div>
-        <a href={citation.source_url} target="_blank" rel="noopener noreferrer" aria-label={`View official source ${citation.document_title} (opens in new tab)`} className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-lg px-2 text-[11px] font-bold text-[#245d98] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2b65a5]">
-          <span className="hidden sm:inline">View official source</span><ExternalLink className="size-3.5" aria-hidden="true" />
-        </a>
-      </div>
-    </article>
+  const hasLink = citation.source_url && citation.source_url !== "#";
+  const content = (
+    <>
+      <FileText className="size-3.5 shrink-0" aria-hidden="true" />
+      <span className="truncate">{citation.document_title}</span>
+      {citation.clause && (
+        <span className="text-[10px] text-[#7a8a9e]">· {citation.clause}</span>
+      )}
+      {hasLink && <ExternalLink className="size-3 shrink-0 text-[#7a8a9e]" aria-hidden="true" />}
+    </>
+  );
+  const className =
+    "inline-flex max-w-full items-center gap-1.5 rounded-full border border-[#d5e0e9] bg-[#f6f9fc] px-2.5 py-1 text-[11px] font-medium text-[#345070] hover:bg-white hover:border-[#8aabc8] transition";
+  return hasLink ? (
+    <a href={citation.source_url} target="_blank" rel="noopener noreferrer" className={className}>
+      {content}
+    </a>
+  ) : (
+    <span className={className}>{content}</span>
   );
 }
