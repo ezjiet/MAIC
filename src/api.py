@@ -1,10 +1,9 @@
-"""FastAPI backend for Clarify MY — chat + form assistant."""
-import shutil, uuid, json
+"""FastAPI backend for Clarify MY — chat + smart form assistant."""
+import shutil, uuid
 from pathlib import Path
-from fastapi import FastAPI, UploadFile, File, Form as FormParam, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from src.router import route
@@ -12,25 +11,24 @@ from src.retrieve import retrieve
 from src.generate import answer, _detect_language
 from src.form_extract import extract_fields
 from src.form_facts import extract_facts
+from src.form_prepare import prepare_form_guide
 from src.form_suggest import suggest_all
 from src.form_pdf import generate_filled_summary
-from src.form_prepare import prepare_form_guide
+from src.form_acroform import fill_acroform_pdf
 
 app = FastAPI(title="Clarify MY")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
-)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 PDF_DIR = Path("data/raw").resolve()
-FORMS_DIR = Path("data/forms").resolve()
-FORMS_DIR.mkdir(parents=True, exist_ok=True)
-DRAFTS_DIR = Path("data/drafts").resolve()
-DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
+FORMS_DIR = Path("data/forms").resolve();   FORMS_DIR.mkdir(parents=True, exist_ok=True)
+DRAFTS_DIR = Path("data/drafts").resolve(); DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
 
 if PDF_DIR.exists():
     app.mount("/pdfs", StaticFiles(directory=str(PDF_DIR)), name="pdfs")
 app.mount("/drafts", StaticFiles(directory=str(DRAFTS_DIR)), name="drafts")
+
+# In-memory: form_id -> uploaded path (so we can fill the original PDF at finalise step)
+_UPLOADED: dict[str, Path] = {}
 
 # ------------------ Chat ------------------
 
@@ -51,18 +49,18 @@ CANNED = {
                   "english":"Hi! I'm Clarify MY. Ask me anything about LHDN, KWSP, or JPJ.",
                   "chinese":"你好！我是 Clarify MY。有关 LHDN、KWSP 或 JPJ 的问题都可以问我。",
                   "manglish":"Hai! I'm Clarify MY. Boleh tanya about LHDN, KWSP, or JPJ."},
-    "LHDN_BARE": {"malay":"Boleh! Cuba tanya spesifik seperti: 'bila deadline file cukai?', 'macam mana claim relief medical?'",
-                  "english":"Sure! Try something specific like: 'when is the tax filing deadline?', 'how do I claim medical relief?'",
-                  "chinese":"可以！请问得具体一些，例如：'什么时候是报税截止日期？'、'如何申请医疗税务减免？'",
-                  "manglish":"Boleh! Try tanya specific: 'when's the tax filing deadline?', 'macam mana claim medical relief?'"},
-    "KWSP_BARE": {"malay":"Boleh! Cuba: 'macam mana withdraw Akaun 2?', 'apa beza Akaun 1 dengan Fleksibel?'",
-                  "english":"Sure! Try: 'how do I withdraw Account 2?', 'what's the difference between Account 1 and Flexible?'",
-                  "chinese":"可以！例如：'如何提取账户2？'、'账户1 和灵活账户有什么区别？'",
-                  "manglish":"Boleh! Try: 'macam mana withdraw Akaun 2?', 'apa beza Akaun 1 vs Flexible?'"},
-    "JPJ_BARE":  {"malay":"Boleh! Cuba: 'macam mana renew lesen?', 'berapa road tax kereta 1.5cc?'",
-                  "english":"Sure! Try: 'how do I renew my licence?', 'how much is road tax for a 1500cc car?'",
-                  "chinese":"可以！例如：'如何更新驾照？'、'1500cc 的路税多少钱？'",
-                  "manglish":"Boleh! Try: 'how to renew lesen memandu?', 'berapa road tax kereta 1500cc?'"},
+    "LHDN_BARE": {"malay":"Boleh! Cuba tanya spesifik: 'bila deadline file cukai?'",
+                  "english":"Sure! Try: 'when is the tax filing deadline?'",
+                  "chinese":"可以！例如：'什么时候是报税截止日期？'",
+                  "manglish":"Boleh! Try: 'when's the tax filing deadline?'"},
+    "KWSP_BARE": {"malay":"Boleh! Cuba: 'macam mana withdraw Akaun 2?'",
+                  "english":"Sure! Try: 'how do I withdraw Account 2?'",
+                  "chinese":"可以！例如：'如何提取账户2？'",
+                  "manglish":"Boleh! Try: 'macam mana withdraw Akaun 2?'"},
+    "JPJ_BARE":  {"malay":"Boleh! Cuba: 'berapa road tax kereta 1.5cc?'",
+                  "english":"Sure! Try: 'how much road tax for a 1500cc car?'",
+                  "chinese":"可以！例如：'1500cc 的路税多少钱？'",
+                  "manglish":"Boleh! Try: 'berapa road tax kereta 1500cc?'"},
 }
 
 @app.get("/")
@@ -96,22 +94,27 @@ def chat(req: ChatRequest):
 
 @app.post("/form/extract")
 async def form_extract(file: UploadFile = File(...)):
-    """Upload a form image/PDF -> get its fields as JSON."""
+    """Upload form -> get fields + whether the original supports direct fill."""
     if not file.filename:
         raise HTTPException(400, "No filename")
     form_id = uuid.uuid4().hex[:12]
     dest = FORMS_DIR / f"{form_id}_{file.filename}"
     with dest.open("wb") as f:
         shutil.copyfileobj(file.file, f)
+    _UPLOADED[form_id] = dest
+
     try:
-        fields = extract_fields(dest)
+        result = extract_fields(dest)
     except Exception as e:
         raise HTTPException(500, f"Form extraction failed: {e}")
+
     return {
         "form_id": form_id,
         "form_name": file.filename,
-        "fields": fields,
-        "field_count": len(fields),
+        "fields": result["fields"],
+        "field_count": len(result["fields"]),
+        "is_fillable": result["is_fillable"],
+        "method": result["method"],
     }
 
 class PrepareRequest(BaseModel):
@@ -121,28 +124,21 @@ class PrepareRequest(BaseModel):
 
 @app.post("/form/prepare")
 def form_prepare(req: PrepareRequest):
-    """Given extracted fields, return a friendly 'what this form needs' guide."""
-    guide = prepare_form_guide(req.form_name, req.agency, req.fields)
-    return guide
+    return prepare_form_guide(req.form_name, req.agency, req.fields)
 
 class SuggestRequest(BaseModel):
     form_id: str
     form_name: str
-    agency: str          # "lhdn" / "kwsp" / "jpj"
+    agency: str
     fields: list[dict]
-    facts_text: str      # citizen's free-text description
+    facts_text: str
 
 @app.post("/form/suggest")
 def form_suggest(req: SuggestRequest):
     facts = extract_facts(req.facts_text)
     suggestions = suggest_all(req.fields, req.agency, facts)
-    return {
-        "form_id": req.form_id,
-        "form_name": req.form_name,
-        "agency": req.agency,
-        "facts": facts,
-        "suggestions": suggestions,
-    }
+    return {"form_id": req.form_id, "form_name": req.form_name, "agency": req.agency,
+            "facts": facts, "suggestions": suggestions}
 
 class FinaliseRequest(BaseModel):
     form_id: str
@@ -150,10 +146,30 @@ class FinaliseRequest(BaseModel):
     agency: str
     facts: dict
     suggestions: list[dict]
+    is_fillable: bool = False
 
 @app.post("/form/finalise")
 def form_finalise(req: FinaliseRequest):
-    """Generate a downloadable draft summary PDF from the reviewed suggestions."""
-    out = DRAFTS_DIR / f"{req.form_id}_draft.pdf"
+    """If is_fillable=True and we still have the uploaded PDF, fill the original AcroForm.
+    Otherwise generate a review-summary PDF."""
+    if req.is_fillable and req.form_id in _UPLOADED:
+        try:
+            source_pdf = _UPLOADED[req.form_id]
+            values = {}
+            for s in req.suggestions:
+                fld = s.get("field") or {}
+                name = fld.get("field_code") or fld.get("field_name")
+                if name and s.get("value") not in (None, ""):
+                    values[name] = s["value"]
+            out = DRAFTS_DIR / f"{req.form_id}_filled.pdf"
+            fill_acroform_pdf(source_pdf, values, out)
+            return {"download_url": f"/drafts/{out.name}", "form_id": req.form_id,
+                    "mode": "official_filled", "filename": out.name}
+        except Exception as e:
+            print(f"[finalise] AcroForm fill failed, falling back to summary: {e}")
+
+    # Fallback: summary PDF
+    out = DRAFTS_DIR / f"{req.form_id}_summary.pdf"
     generate_filled_summary(out, req.form_name, req.agency, req.facts, req.suggestions)
-    return {"download_url": f"/drafts/{out.name}", "form_id": req.form_id}
+    return {"download_url": f"/drafts/{out.name}", "form_id": req.form_id,
+            "mode": "summary", "filename": out.name}
