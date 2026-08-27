@@ -6,57 +6,53 @@
 - Local:         http://localhost:3000
 - Network:       http://172.16.254.230:3000
 - Environments: .env.local
-✓ Ready in 132ms
+✓ Ready in 125ms
 ✓ Running next.config.ts took 12ms
 
- GET / 200 in 179ms (next.js: 90ms, application-code: 89ms)
- GET /?view=history 200 in 38ms (next.js: 4ms, application-code: 34ms)
- GET /?view=history 200 in 34ms (next.js: 4ms, application-code: 30ms)
- GET /form 200 in 23ms (next.js: 12ms, application-code: 11ms)
+ GET /form 200 in 192ms (next.js: 70ms, application-code: 122ms)
+ GET /about 200 in 49ms (next.js: 8ms, application-code: 41ms)
+ GET / 200 in 56ms (next.js: 10ms, application-code: 46ms)
+ GET /form 200 in 7ms (next.js: 1.3ms, application-code: 6ms)
 [browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
-[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-https://react.dev/link/hydration-mismatch
-
-  ...
-    <InnerScrollHandlerNew focusAndScrollRef={{scrollRef:null, ...}} cacheNode={{rsc:{...}, ...}}>
-      <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
-        <LoadingBoundary name="form/" loading={null}>
-          <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
-            <RedirectBoundary>
-              <RedirectErrorBoundary router={{...}}>
-                <InnerLayoutRouter url="/form" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} segmentPath={[...]} ...>
-                  <SegmentViewNode type="page" pagePath="form/page.tsx">
-                    <SegmentTrieNode>
-                    <ClientPageRoot Component={function FormAssistantPage} serverProvidedParams={{...}}>
-                      <FormAssistantPage params={Promise} searchParams={Promise}>
-                        <main className="mx-auto ma...">
-                          <header className="mb-6">
-                            <h1>
-                            <p className="mt-1 text-sm text-[#52647a]">
-+                             Upload a Malaysian government form → AI reads it → tells you what info it needs → fills i...
--                             Upload a Malaysian government form, describe your situation, review AI-suggested values, ...
-                            ...
-                          ...
-                  ...
-                ...
-      ...
-
-    at <unknown> (https://react.dev/link/hydration-mismatch)
-    at p (<anonymous>)
-    at FormAssistantPage (src/app/form/page.tsx:125:9)
-  123 |       <header className="mb-6">
-  124 |         <h1 className="text-2xl font-bold text-[#10243e]">Form Assistant</h1>
-> 125 |         <p className="mt-1 text-sm text-[#52647a]">
-      |         ^
-  126 |           Upload a Malaysian government form → AI reads it → tells you what info it needs →
-  127 |           fills it → you review → download.
-  128 |         </p>
+ GET / 200 in 6ms (next.js: 1.8ms, application-code: 5ms)
+ GET /form 200 in 12ms (next.js: 3ms, application-code: 9ms)
+ GET /about 200 in 40ms (next.js: 3ms, application-code: 37ms)
+ GET / 200 in 14ms (next.js: 3ms, application-code: 11ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /form 200 in 17ms (next.js: 4ms, application-code: 13ms)
+ GET /?view=history 200 in 15ms (next.js: 3ms, application-code: 13ms)
+ GET /form 200 in 14ms (next.js: 3ms, application-code: 11ms)
+ GET /form 200 in 13ms (next.js: 2ms, application-code: 11ms)
+ GET /?view=history 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /saved 200 in 20ms (next.js: 10ms, application-code: 9ms)
+ GET /faq 200 in 23ms (next.js: 12ms, application-code: 11ms)
+ GET /saved 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /faq 200 in 14ms (next.js: 2ms, application-code: 12ms)
+ GET /about 200 in 14ms (next.js: 3ms, application-code: 12ms)
+ GET /faq 200 in 13ms (next.js: 3ms, application-code: 11ms)
+ GET /about 200 in 14ms (next.js: 3ms, application-code: 11ms)
+ GET /form 200 in 14ms (next.js: 3ms, application-code: 11ms)
+ GET /?view=history 200 in 14ms (next.js: 3ms, application-code: 11ms)
+ GET /saved 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /about 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /faq 200 in 15ms (next.js: 4ms, application-code: 11ms)
+ GET /about 200 in 16ms (next.js: 3ms, application-code: 13ms)
+ GET / 200 in 13ms (next.js: 2ms, application-code: 10ms)
+ GET /form 200 in 17ms (next.js: 4ms, application-code: 12ms)
+ GET / 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /form 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /?view=history 200 in 16ms (next.js: 5ms, application-code: 10ms)
+ GET /faq 200 in 10ms (next.js: 1.7ms, application-code: 8ms)
+ GET /about 200 in 11ms (next.js: 2ms, application-code: 8ms)
+ GET / 200 in 13ms (next.js: 3ms, application-code: 10ms)
+ GET /form 200 in 17ms (next.js: 3ms, application-code: 14ms)
+ GET /?view=history 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /form 200 in 6ms (next.js: 1.1ms, application-code: 5ms)
+ GET / 200 in 13ms (next.js: 3ms, application-code: 11ms)
+ GET /form 200 in 14ms (next.js: 3ms, application-code: 12ms)
+✓ Compiled in 32ms
+ GET /form 200 in 17ms (next.js: 1.5ms, application-code: 16ms)
+ GET /form 200 in 10ms (next.js: 1.2ms, application-code: 9ms)
+✓ Compiled in 23ms
+ GET / 200 in 44ms (next.js: 6ms, application-code: 38ms)
+ GET / 200 in 38ms (next.js: 3ms, application-code: 35ms)

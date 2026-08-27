@@ -1,5 +1,9 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Sidebar } from "@/components/Sidebar";
+import { MobileHeader } from "@/components/MobileHeader";
+import { Footer } from "@/components/Footer";
 
 const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
@@ -30,6 +34,12 @@ async function apiFetch<T>(path: string, init: RequestInit): Promise<T> {
 }
 
 export default function FormAssistantPage() {
+  const router = useRouter();
+  const navProps = {
+    activeView: "form" as const as "chat",
+    onOpenChat: () => router.push("/"),
+    onOpenHistory: () => router.push("/?view=history"),
+  };
   const [step, setStep] = useState<1|2|3|4>(1);
   const [file, setFile] = useState<File | null>(null);
   const [formId, setFormId] = useState("");
@@ -119,7 +129,12 @@ export default function FormAssistantPage() {
   }
 
   return (
-    <main className="mx-auto max-w-4xl p-6">
+    <div className="min-h-screen w-full bg-[#f5f8fb] text-[#10243e] lg:h-screen lg:min-h-[680px] lg:overflow-hidden">
+      <div className="min-h-screen w-full bg-white lg:grid lg:h-full lg:min-h-0 lg:grid-cols-[232px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)]">
+        <MobileHeader />
+        <Sidebar {...navProps} />
+        <div className="min-w-0 bg-[#f5f8fb] px-4 py-6 sm:px-6 sm:py-8 lg:min-h-0 lg:overflow-y-auto lg:px-8 lg:py-10 flex flex-col">
+    <main className="mx-auto w-full max-w-[940px] flex-1">
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-[#10243e]">Form Assistant</h1>
         <p className="mt-1 text-sm text-[#52647a]">
@@ -302,5 +317,9 @@ export default function FormAssistantPage() {
         </section>
       )}
     </main>
+    <Footer />
+        </div>
+      </div>
+    </div>
   );
 }

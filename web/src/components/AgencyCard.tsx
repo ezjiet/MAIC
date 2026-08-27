@@ -12,7 +12,7 @@ export function AgencyCard({ agency, compact = false }: { agency: Exclude<Agency
       style={{ background: detail.tint, borderColor: detail.border }}
     >
       <span className={`grid shrink-0 place-items-center border border-black/[0.04] bg-white shadow-sm ${compact ? "size-11 rounded-xl" : "size-14 rounded-2xl"}`}>
-        <Image src={detail.logo} alt={`${agency} official logo`} width={52} height={52} className={compact ? "size-9 object-contain" : "size-11 object-contain"} unoptimized />
+        <Image src={detail.logo} alt={`${agency} official logo`} width={52} height={52} className={compact ? "size-9 object-contain" : "size-11 object-contain"} />
       </span>
       <span className="min-w-0 flex-1">
         <span className={`block font-bold text-[#10243e] ${compact ? "text-xs" : "text-sm"}`}>{detail.name}</span>

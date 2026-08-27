@@ -7,6 +7,7 @@ import { useState } from "react";
 import { AgencyBadge } from "@/components/AgencyBadge";
 import { MobileHeader, MobileNavigation } from "@/components/MobileHeader";
 import { Sidebar } from "@/components/Sidebar";
+import { Footer } from "@/components/Footer";
 import { SupportedAgencies } from "@/components/SupportedAgencies";
 import { faqSections, type FaqEntry } from "@/data/faq";
 import { agencyDetails } from "@/lib/agencies";
@@ -75,6 +76,7 @@ export function FaqPage() {
               <SupportedAgencies />
               <MobileNavigation {...navigationProps} />
             </div>
+            <Footer />
           </div>
         </main>
       </div>

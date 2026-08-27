@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AgencyBadge } from "@/components/AgencyBadge";
 import { MobileHeader, MobileNavigation } from "@/components/MobileHeader";
 import { Sidebar } from "@/components/Sidebar";
+import { Footer } from "@/components/Footer";
 import { SupportedAgencies } from "@/components/SupportedAgencies";
 import { getChats } from "@/lib/history";
 import { formatSavedAt, getSavedAnswers, removeSavedAnswer } from "@/lib/saved";
@@ -127,6 +128,7 @@ export function SavedAnswersPage() {
               <SupportedAgencies />
               <MobileNavigation {...navigationProps} />
             </div>
+            <Footer />
           </div>
         </main>
       </div>

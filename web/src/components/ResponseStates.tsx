@@ -1,6 +1,7 @@
 import { Bookmark, BookOpenCheck, CircleAlert, RefreshCw, Search, ShieldQuestion } from "lucide-react";
 import { AgencyBadge } from "@/components/AgencyBadge";
 import { CitationCard } from "@/components/CitationCard";
+import { Markdown } from "@/components/Markdown";
 import type { ApiErrorKind, AskResponse } from "@/types/clarify";
 
 export function LoadingState() {
@@ -28,7 +29,7 @@ export function AnswerCard({ response, onFollowUp, saved = false, onToggleSave, 
         <div className="flex flex-wrap items-center gap-2"><span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#26814d]"><BookOpenCheck className="size-4" aria-hidden="true" />Grounded in official sources</span><AgencyBadge agency={response.agency} /></div>
         {onToggleSave && <button type="button" onClick={onToggleSave} aria-pressed={saved} aria-label={saved ? "Saved — remove bookmark" : "Save answer"} title={saved ? "Saved" : "Save answer"} className={`grid size-8 shrink-0 place-items-center rounded-lg border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28659c] ${saved ? "border-[#b7cee2] bg-[#eaf2fa] text-[#174f83]" : "border-[#d9e1e8] bg-white text-[#718094] hover:bg-[#f4f7f9]"}`}><Bookmark className={`size-4 ${saved ? "fill-current" : ""}`} aria-hidden="true" /></button>}
       </div>
-      <p className="mt-3 whitespace-pre-wrap text-[14px] leading-6 text-[#10243e]">{response.answer}</p>
+      <div className="mt-3"><Markdown>{response.answer}</Markdown></div>
       {response.citations.length > 0 && (
         <div className="mt-3">
           <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#6e7c8e] mb-1.5">Sources</p>
@@ -46,7 +47,7 @@ export function RefusalState({ response }: { response: AskResponse }) {
   return (
     <div className="response-enter max-w-[88%] rounded-2xl rounded-tl-md border border-[#dfe4e9] bg-white p-4">
       <p className="flex items-center gap-2 text-sm font-bold text-[#10243e]"><ShieldQuestion className="size-4 text-[#607087]" aria-hidden="true" />I don’t have enough source support</p>
-      <p className="mt-2 text-sm leading-6 text-[#5e6f83]">{response.answer}</p>
+      <div className="mt-2 text-[#5e6f83]"><Markdown>{response.answer}</Markdown></div>
       <p className="mt-2 text-xs font-semibold text-[#788697]">Clarify MY avoids answering when there isn’t enough official-source support.</p>
     </div>
   );

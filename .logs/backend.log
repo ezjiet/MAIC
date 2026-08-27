@@ -1,108 +1,158 @@
 INFO:     Will watch for changes in these directories: ['/Users/ezjiet/Projects/MAIC']
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [2660] using WatchFiles
+INFO:     Started reloader process [5395] using WatchFiles
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 Loading embedder and reranker (first run downloads reranker ~1GB)...
-Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 91593.01it/s]
-Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 21283.74it/s]
-INFO:     Started server process [2668]
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 49670.56it/s]
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 19578.37it/s]
+INFO:     Started server process [5404]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:63000 - "GET / HTTP/1.1" 200 OK
-
-[CHAT] query='hi' history_turns=0
-[CHAT] router -> GREETING  lang=malay
-[CHAT] CANNED -> 'Hai! Saya Clarify MY. Tanya apa-apa tentang LHDN, KWSP, atau JPJ.'
-INFO:     127.0.0.1:63008 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63758 - "OPTIONS /chat HTTP/1.1" 200 OK
+[CHAT] query='Tell me about JPJ road tax.' history_turns=7
 Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
-WARNING:  WatchFiles detected changes in 'src/api.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for connections to close. (CTRL+C to force quit)
-
-[CHAT] query='berapa road tax kereta 1500cc?' history_turns=0
 [CHAT] router -> JPJ  lang=malay
-[CHAT] retrieved 8 chunks for JPJ
-  [gemini-flash-latest busy, retrying in 1s...]
-[CHAT] answer refused=False len=892 preview='Kadar cukai jalan (road tax) untuk kereta persendirian enjin **1500cc (kategori 1401cc – 1600cc)** adalah mengikut kadar'
-INFO:     127.0.0.1:63019 - "POST /chat HTTP/1.1" 200 OK
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [2668]
-WARNING:  WatchFiles detected changes in 'src/api.py'. Reloading...
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading embedder and reranker (first run downloads reranker ~1GB)...
-Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 65878.24it/s]
-Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 22587.41it/s]
-INFO:     Started server process [2775]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [2775]
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading embedder and reranker (first run downloads reranker ~1GB)...
-Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 57847.37it/s]
-Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 22328.26it/s]
-INFO:     Started server process [2785]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
+[CHAT] calling retrieve(JPJ)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1254 preview='Boleh, saya cerita ringkas pasal road tax (Lesen Kenderaan Motor - LKM) JPJ ni. \n\nKadar bayaran road tax kereta persendi'
+INFO:     127.0.0.1:63758 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='2000cc' history_turns=8
+[CHAT] router -> JPJ  lang=malay
+[CHAT] calling retrieve(JPJ)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=852 preview='Untuk kereta 2000cc (jenis saloon/sedan persendirian di Semenanjung Malaysia), pengiraan road tax adalah seperti berikut'
+INFO:     127.0.0.1:63764 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='please use english' history_turns=8
+[CHAT] router -> GREETING  lang=english
+[CHAT] CANNED -> "Hi! I'm Clarify MY. Ask me anything about LHDN, KWSP, or JPJ."
+INFO:     127.0.0.1:63770 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='Tell me about JPJ licence renewal.' history_turns=8
+[CHAT] router -> JPJ  lang=malay
+[CHAT] calling retrieve(JPJ)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1401 preview='Boleh, saya bantu jelaskan cara nak perbaharui Lesen Memandu Malaysia (LMM) dengan mudah.\n\nAwak boleh pilih sama ada nak'
+INFO:     127.0.0.1:63774 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63792 - "GET /pdfs/jpj/JPJ_BORANG_PENYATA_PERTUKARAN_MILIKAN_KENDERAAN_MOTOR_SECARA_SUKARELA_OLEH_PEMUNYA_BERDAFTAR_PEMUNYA_BAHARU_JPJK3_PIND_12024_1.pdf.pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63792 - "GET /favicon.ico HTTP/1.1" 404 Not Found
 WARNING:  WatchFiles detected changes in 'src/generate.py'. Reloading...
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [2785]
+INFO:     Finished server process [5404]
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 Loading embedder and reranker (first run downloads reranker ~1GB)...
-Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 46915.35it/s]
-Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 25627.91it/s]
-INFO:     Started server process [2802]
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 55815.56it/s]
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 20885.43it/s]
+WARNING:  WatchFiles detected changes in 'src/api.py'. Reloading...
+INFO:     Started server process [5627]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-[CHAT] query='berapa road tax kereta 1500cc?' history_turns=0
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [5627]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading embedder and reranker (first run downloads reranker ~1GB)...
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 54940.46it/s]
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 21811.51it/s]
+INFO:     Started server process [5636]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:63810 - "GET / HTTP/1.1" 200 OK
+[CHAT] query='Tell me about JPJ licence renewal.' history_turns=2
 Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
-[CHAT] router -> JPJ  lang=malay
-[CHAT] calling retrieve(JPJ)...
-[CHAT] retrieved 8 chunks
-[CHAT] calling answer()...
-[CHAT] answer refused=False len=920 preview='Hai! Untuk kereta persendirian (saloon) berkapasiti **1500cc** di Semenanjung Malaysia, kadar cukai jalan (road tax) sta'
-INFO:     127.0.0.1:63052 - "POST /chat HTTP/1.1" 200 OK
-[CHAT] query='how do I withdraw KWSP Account 2?' history_turns=0
-[CHAT] router -> KWSP  lang=english
-[CHAT] calling retrieve(KWSP)...
-[CHAT] retrieved 8 chunks
-[CHAT] calling answer()...
-[CHAT] answer refused=False len=2013 preview='Withdrawing from your EPF **Akaun Sejahtera (Account 2)** depends entirely on what you need the money for, as EPF allows'
-INFO:     127.0.0.1:63058 - "POST /chat HTTP/1.1" 200 OK
-[CHAT] query='what is LHDN tax filing deadline?' history_turns=0
-[CHAT] router -> LHDN  lang=english
-[CHAT] calling retrieve(LHDN)...
-[CHAT] retrieved 8 chunks
-[CHAT] calling answer()...
-[CHAT] answer refused=False len=955 preview='The LHDN tax filing deadline depends on whether you are doing manual filing or e-Filing, and what type of taxpayer you a'
-INFO:     127.0.0.1:63058 - "POST /chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63072 - "OPTIONS /chat HTTP/1.1" 200 OK
-[CHAT] query='Tell me about using KWSP savings for a home purchase.' history_turns=0
-[CHAT] router -> KWSP  lang=malay
-[CHAT] calling retrieve(KWSP)...
-[CHAT] retrieved 8 chunks
-[CHAT] calling answer()...
-[CHAT] answer refused=False len=1621 preview='Boleh, saya boleh tolong terangkan! Kalau awak nak guna duit KWSP untuk beli atau bina rumah, itu memang dibenarkan di b'
-INFO:     127.0.0.1:63072 - "POST /chat HTTP/1.1" 200 OK
-[CHAT] query='calculate the roadtax for car 1000cc' history_turns=2
 [CHAT] router -> JPJ  lang=english
 [CHAT] calling retrieve(JPJ)...
 [CHAT] retrieved 8 chunks
 [CHAT] calling answer()...
-[CHAT] answer refused=False len=1268 preview='Calculating the road tax for a **1000cc private saloon car** in West Malaysia is straightforward. Since engine capacity '
-INFO:     127.0.0.1:63078 - "POST /chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63085 - "POST /form/extract HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63085 - "OPTIONS /form/prepare HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63085 - "POST /form/prepare HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63088 - "OPTIONS /form/suggest HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63088 - "POST /form/suggest HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63094 - "OPTIONS /form/finalise HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63094 - "POST /form/finalise HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63096 - "GET /drafts/1cbb4be0a026_summary.pdf HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63096 - "GET /favicon.ico HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:63118 - "GET / HTTP/1.1" 200 OK
+[CHAT] answer refused=False len=1208 preview='Renewing your driving licence (CDL or PDL) with JPJ is pretty straightforward. You can do it for a period of **1, 2, 3, '
+INFO:     127.0.0.1:63812 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='Tell me about JPJ licence renewal.' history_turns=0
+[CHAT] router -> JPJ  lang=english
+[CHAT] calling retrieve(JPJ)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1766 preview="Hello! I'd be happy to help you with your JPJ driving licence (Lesen Memandu) renewal. \n\nRenewing your Malaysian driving"
+INFO:     127.0.0.1:63817 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='How do I renew my KWSP account?' history_turns=2
+[CHAT] router -> KWSP  lang=english
+[CHAT] calling retrieve(KWSP)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1266 preview='You don\'t actually need to "renew" your KWSP (EPF) account, because your membership stays active as long as you have sav'
+INFO:     127.0.0.1:63817 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='berapa road tax kereta 1500cc?' history_turns=0
+[CHAT] router -> JPJ  lang=manglish
+[CHAT] calling retrieve(JPJ)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=886 preview='Hai boss! Nak tahu road tax untuk kereta **1500cc** eh? Standard private saloon car (sedan/hatchback) dekat West Malaysi'
+INFO:     127.0.0.1:63817 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='what income tax reliefs can I claim?' history_turns=0
+[CHAT] router -> LHDN  lang=english
+[CHAT] calling retrieve(LHDN)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1571 preview='If you are a tax resident in Malaysia, you can claim several individual tax reliefs to lower your chargeable income. \n\nH'
+INFO:     127.0.0.1:63817 - "POST /chat HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'src/generate.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [5636]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading embedder and reranker (first run downloads reranker ~1GB)...
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|██████████| 391/391 [00:00<00:00, 54328.92it/s]
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 23142.04it/s]
+INFO:     Started server process [5689]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+[CHAT] query='Tell me about JPJ licence renewal.' history_turns=0
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+[CHAT] router -> JPJ  lang=english
+[CHAT] calling retrieve(JPJ)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1483 preview="Hello! Let's get your driving licence (**Lesen Memandu Malaysia - LMM**) renewed without any hassle. \n\nYou can renew you"
+INFO:     127.0.0.1:63835 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='berapa road tax kereta 1500cc?' history_turns=0
+[CHAT] router -> JPJ  lang=malay
+[CHAT] calling retrieve(JPJ)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1005 preview='Hai! Untuk kereta persendirian (saloon) 1500cc di Semenanjung Malaysia, kadar cukai jalan (road tax) adalah **RM 90 seta'
+INFO:     127.0.0.1:63835 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='How do I withdraw Account 2?' history_turns=0
+[CHAT] router -> KWSP  lang=english
+[CHAT] calling retrieve(KWSP)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1585 preview='To withdraw from your KWSP Account 2 (now known as **Akaun Sejahtera**), you can do it easily online or via the counter.'
+INFO:     127.0.0.1:63835 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='macam mana nak keluarkan duit Akaun 2?' history_turns=0
+[CHAT] router -> KWSP  lang=malay
+[CHAT] calling retrieve(KWSP)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1402 preview='Hai! Nak keluarkan duit dari **Akaun Sejahtera (Akaun 2) KWSP** sekarang senang sangat, tapi kena ikut tujuan apa yang a'
+INFO:     127.0.0.1:63835 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='boleh terangkan sikit?' history_turns=2
+[CHAT] router -> UNCLEAR  lang=english
+[CHAT] calling answer() with no chunks...
+[CHAT] answer(no chunks) refused=False len=681 preview="Sure, let me explain! As Clarify MY, I'm here to help you navigate Malaysian government services without the usual heada"
+INFO:     127.0.0.1:63835 - "POST /chat HTTP/1.1" 200 OK
+[CHAT] query='什么时候是报税截止日期？' history_turns=0
+[CHAT] router -> GIBBERISH  lang=chinese
+[CHAT] CANNED -> '抱歉，我看不懂您的问题。请用完整的句子重新提问。'
+INFO:     127.0.0.1:63835 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63923 - "OPTIONS /chat HTTP/1.1" 200 OK
+[CHAT] query='tell me about income tax' history_turns=8
+[CHAT] router -> LHDN  lang=english
+[CHAT] calling retrieve(LHDN)...
+[CHAT] retrieved 8 chunks
+[CHAT] calling answer()...
+[CHAT] answer refused=False len=1868 preview="No problem, let's talk about Malaysian income tax (LHDN) in simple terms!\n\nIncome tax in Malaysia is charged on an **ann"
+INFO:     127.0.0.1:63923 - "POST /chat HTTP/1.1" 200 OK

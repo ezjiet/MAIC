@@ -75,16 +75,15 @@ def chat(req: ChatRequest):
         sys.stdout.flush()
     log(f"query={req.query!r} history_turns={len(req.history)}")
     try:
+        history = [{"role":h.role,"content":h.content} for h in req.history]
         label = route(req.query)
-        lang = _detect_language(req.query)
+        lang = _detect_language(req.query, history)
         log(f"router -> {label}  lang={lang}")
 
         if label in CANNED:
             ans = CANNED[label].get(lang, CANNED[label]["english"])
             log(f"CANNED -> {ans[:80]!r}")
             return {"agency":"UNCLEAR","answer":ans,"citations":[],"refused":False}
-
-        history = [{"role":h.role,"content":h.content} for h in req.history]
 
         if label in {"UNCLEAR", "OFFTOPIC"}:
             log("calling answer() with no chunks...")

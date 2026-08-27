@@ -17,6 +17,7 @@ import {
 import { AgencyCard } from "@/components/AgencyCard";
 import { MobileHeader, MobileNavigation } from "@/components/MobileHeader";
 import { Sidebar } from "@/components/Sidebar";
+import { Footer } from "@/components/Footer";
 import { SupportedAgencies } from "@/components/SupportedAgencies";
 
 const processSteps = [
@@ -211,6 +212,7 @@ export function AboutPage() {
               <SupportedAgencies />
               <MobileNavigation {...navigationProps} />
             </div>
+            <Footer />
           </div>
         </main>
       </div>

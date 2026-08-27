@@ -10,7 +10,6 @@ export function ClarifyAvatar() {
           width={1254}
           height={1254}
           className="size-[46px] max-w-none object-contain object-center"
-          unoptimized
         />
       </span>
     </span>

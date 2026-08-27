@@ -30,21 +30,74 @@ def _call_with_retry(models: list[str], contents, max_tries_per_model: int = 2):
                 raise  # unknown error, propagate
     raise last_err or RuntimeError("All Gemini models exhausted")
 
-def _detect_language(text: str) -> str:
-    if re.search(r"[一-鿿]", text): return "chinese"
+def _score_language(text: str) -> tuple[str | None, str, str]:
+    """Return (explicit_override, malay_hits_flag, english_hits_flag).
+    explicit_override is 'english' | 'malay' | 'chinese' | 'manglish' | None."""
     lower = text.lower()
+    # explicit user directive wins
+    override = None
+    if any(p in lower for p in ["use english","in english","reply in english","english please","switch to english","balas english","balas dalam english"]):
+        override = "english"
+    elif any(p in lower for p in ["use malay","in malay","use bahasa","in bahasa","gunakan bahasa","balas bahasa","balas melayu","use bm"]):
+        override = "malay"
+    elif any(p in lower for p in ["use chinese","in chinese","reply in chinese","中文回复","请用中文","用中文"]):
+        override = "chinese"
+    elif any(p in lower for p in ["use manglish","in manglish","reply manglish"]):
+        override = "manglish"
     malay_markers = ["saya","awak","kamu","boleh","macam mana","nak ","tak ","ke tak",
                      "berapa","bila","kenapa","apa ","yang ","untuk ","kena ","dengan ",
                      "adalah","sudah","belum","sini","situ","mana ","camne","eh "," lah",
                      " la ","tolong","tanya","sikit","cukai","lesen","kereta"]
-    english_markers = ["what ","how ","when ","why ","can i","do i","should ","would ",
-                       "the ","is ","are ","will ","please","hi ","hello","i ","my "]
-    has_malay = any(m in lower for m in malay_markers)
-    has_english = any(m in lower for m in english_markers)
-    if has_malay and has_english: return "manglish"
-    if has_malay: return "malay"
-    if has_english: return "english"
-    return "malay"
+    english_markers = [
+        # question words
+        "what ","how ","when ","why ","where ","who ",
+        # aux verbs & function words (safe — not used as Malaysian borrowings)
+        "the ","is ","are ","was ","were ","will ","would ","should ","could ","have ","has ",
+        "do i","do you","does ","did ","can i","can you",
+        # pronouns
+        "i ","my ","me ","mine ","you ","your ","we ","our ","us ",
+        # common English verbs unlikely in Malay/Manglish
+        "tell ","explain ","show ","need ","want ",
+        # politeness
+        "please","thanks","hi ","hello",
+    ]
+    return (override,
+            "y" if any(m in lower for m in malay_markers) else "",
+            "y" if any(m in lower for m in english_markers) else "")
+
+def _detect_language(text: str, history: list[dict] | None = None) -> str:
+    # Chinese script always wins on the current message
+    if re.search(r"[一-鿿]", text): return "chinese"
+
+    # 1. Explicit directive in CURRENT message
+    override, has_malay_now, has_english_now = _score_language(text)
+    if override: return override
+
+    # 2. Explicit directive from any past user message (sticky)
+    if history:
+        for turn in reversed(history):
+            if turn.get("role") != "user": continue
+            past_over, _, _ = _score_language(str(turn.get("content","")))
+            if past_over: return past_over
+
+    # 3. Current message alone — clear signal wins
+    if has_malay_now and has_english_now: return "manglish"
+    if has_malay_now: return "malay"
+    if has_english_now: return "english"
+
+    # 4. Fall back to language of most recent user message in history
+    if history:
+        for turn in reversed(history):
+            if turn.get("role") != "user": continue
+            content = str(turn.get("content",""))
+            if re.search(r"[一-鿿]", content): return "chinese"
+            _, hm, he = _score_language(content)
+            if hm and he: return "manglish"
+            if hm: return "malay"
+            if he: return "english"
+
+    # 5. Ultimate default: English (was Malay — most users are typing English)
+    return "english"
 
 LANG_INSTRUCTION = {
     "chinese": "CRITICAL: Reply ENTIRELY in Chinese (中文). Not English, not Malay.",
@@ -118,7 +171,7 @@ def _format_history(history: list[dict]) -> str:
 
 def answer(query: str, chunks: list[dict], history: list[dict] | None = None) -> dict:
     history = history or []
-    lang = _detect_language(query)
+    lang = _detect_language(query, history)
 
     if chunks:
         context = "\n\n---\n\n".join(
@@ -157,17 +210,26 @@ def answer(query: str, chunks: list[dict], history: list[dict] | None = None) ->
     if not text:
         return {"answer": "Cuba tanya semula ya.", "citations": [], "refused": True}
 
-    # Only show citations that actually relate to the query/answer
+    # Only show citations that actually relate to the query/answer,
+    # and DEDUPE by source filename so we never show the same PDF twice.
     q_and_a_lower = (query + " " + text).lower()
+    seen_sources: set[str] = set()
     kept = []
     STOP = {"pdf","form","kwsp","lhdn","jpj","borang","tahun","pind","the","and","for","of"}
-    for c in (chunks[:5] if chunks else []):
-        source = c["source"].lower()
-        keywords = [w for w in re.split(r"[_\.\s]+", source)
+    # Iterate over all chunks (not just top 5) so we surface distinct docs when
+    # the top matches all come from one PDF.
+    for c in (chunks if chunks else []):
+        source = c["source"]
+        source_key = source.lower()
+        if source_key in seen_sources:
+            continue
+        keywords = [w for w in re.split(r"[_\.\s]+", source_key)
                     if len(w) > 3 and w not in STOP]
         if any(kw in q_and_a_lower for kw in keywords):
+            seen_sources.add(source_key)
             kept.append(c)
-    # No hardcoded count. Show only what's actually relevant (could be 0, 1, 2, 3+).
+        if len(kept) >= 3:  # cap to 3 distinct sources
+            break
 
     return {
         "answer": text,
