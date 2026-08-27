@@ -69,26 +69,49 @@ def root():
 
 @app.post("/chat")
 def chat(req: ChatRequest):
-    label = route(req.query)
-    lang = _detect_language(req.query)
+    import traceback, sys
+    def log(msg):
+        print(f"[CHAT] {msg}", flush=True)
+        sys.stdout.flush()
+    log(f"query={req.query!r} history_turns={len(req.history)}")
+    try:
+        label = route(req.query)
+        lang = _detect_language(req.query)
+        log(f"router -> {label}  lang={lang}")
 
-    if label in CANNED:
-        return {"agency":"UNCLEAR","answer":CANNED[label].get(lang, CANNED[label]["english"]),
-                "citations":[],"refused":False}
+        if label in CANNED:
+            ans = CANNED[label].get(lang, CANNED[label]["english"])
+            log(f"CANNED -> {ans[:80]!r}")
+            return {"agency":"UNCLEAR","answer":ans,"citations":[],"refused":False}
 
-    history = [{"role":h.role,"content":h.content} for h in req.history]
+        history = [{"role":h.role,"content":h.content} for h in req.history]
 
-    if label in {"UNCLEAR", "OFFTOPIC"}:
-        result = answer(req.query, chunks=[], history=history)
-        result["agency"] = "UNCLEAR"
+        if label in {"UNCLEAR", "OFFTOPIC"}:
+            log("calling answer() with no chunks...")
+            result = answer(req.query, chunks=[], history=history)
+            result["agency"] = "UNCLEAR"
+            preview = result.get("answer","")[:120]
+            log(f"answer(no chunks) refused={result.get('refused')} len={len(result.get('answer',''))} preview={preview!r}")
+            return result
+
+        log(f"calling retrieve({label})...")
+        chunks = retrieve(req.query, label)
+        log(f"retrieved {len(chunks)} chunks")
+        log("calling answer()...")
+        result = answer(req.query, chunks, history=history)
+        for c in result.get("citations", []):
+            c["agency"] = label.lower()
+        result["agency"] = label
+        preview = result.get("answer","")[:120]
+        log(f"answer refused={result.get('refused')} len={len(result.get('answer',''))} preview={preview!r}")
         return result
-
-    chunks = retrieve(req.query, label)
-    result = answer(req.query, chunks, history=history)
-    for c in result.get("citations", []):
-        c["agency"] = label.lower()
-    result["agency"] = label
-    return result
+    except Exception as e:
+        log(f"!!! EXCEPTION: {type(e).__name__}: {e}")
+        traceback.print_exc()
+        sys.stdout.flush()
+        return {"agency":"UNCLEAR",
+                "answer": f"Backend error: {type(e).__name__}: {e}",
+                "citations":[], "refused": True}
 
 # ------------------ Form Assistant ------------------
 

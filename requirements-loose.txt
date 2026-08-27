@@ -1,0 +1,28 @@
+# Top-level dependencies for Clarify MY backend.
+# Loosely pinned so pip resolves OS-appropriate wheels (macOS / Linux / Windows).
+# Regenerate requirements.txt from this on your machine:
+#   pip install -r requirements-loose.txt && pip freeze > requirements.txt
+
+# --- Web framework ---
+fastapi~=0.141
+uvicorn[standard]~=0.52
+python-multipart~=0.0.32
+
+# --- Config / data ---
+python-dotenv~=1.2
+PyYAML~=6.0
+pydantic~=2.13
+
+# --- LLM + embeddings ---
+google-genai~=2.18
+sentence-transformers~=5.7
+transformers~=5.15
+torch~=2.13
+
+# --- Retrieval ---
+qdrant-client~=1.19
+rank-bm25~=0.2
+
+# --- PDF / documents ---
+pypdf~=6.16
+reportlab~=5.0

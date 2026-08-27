@@ -9,9 +9,9 @@ load_dotenv()
 _client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
 
 # Model fallback chain: try smart first, fall back if quota hit.
-ANSWER_MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-2.5-flash-lite"]
+ANSWER_MODELS = ["gemini-flash-lite-latest", "gemini-flash-latest", "gemini-2.5-flash-lite"]
 
-def _call_with_retry(models: list[str], contents, max_tries_per_model: int = 3):
+def _call_with_retry(models: list[str], contents, max_tries_per_model: int = 2):
     """Try each model in order. On 503/overload, retry same model. On 429/quota, fall back."""
     last_err = None
     for model in models:
@@ -26,7 +26,7 @@ def _call_with_retry(models: list[str], contents, max_tries_per_model: int = 3):
                     break  # fall through to next model
                 if "503" in msg or "UNAVAILABLE" in msg or "overloaded" in msg.lower():
                     print(f"  [{model} busy, retrying in {2**attempt}s...]")
-                    time.sleep(2 ** attempt); continue
+                    time.sleep(min(2 ** attempt, 1)); continue
                 raise  # unknown error, propagate
     raise last_err or RuntimeError("All Gemini models exhausted")
 
