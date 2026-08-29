@@ -46,6 +46,16 @@
   english: "tax relief"
   domain: "Tax reliefs"
 
+"extension of time":
+  formal: "permohonan lanjutan masa prosedur kelulusan lanjutan masa"
+  english: "extension of time application approval procedure"
+  domain: "Application procedure"
+
+"lanjutan masa":
+  formal: "permohonan lanjutan masa prosedur kelulusan"
+  english: "extension of time application approval procedure"
+  domain: "Application procedure"
+
 "e-Invois":
   formal: "e-Invois"
   english: "e-Invoice"

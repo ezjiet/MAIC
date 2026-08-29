@@ -12,7 +12,7 @@ import { getChats } from "@/lib/history";
 import { formatSavedAt, getSavedAnswers, removeSavedAnswer } from "@/lib/saved";
 import type { Agency, ChatSession, SavedAnswer } from "@/types/clarify";
 
-type AgencyFilter = "ALL" | Exclude<Agency, "UNCLEAR">;
+type AgencyFilter = "ALL" | Exclude<Agency, "MULTI" | "UNCLEAR">;
 
 const filters: { label: string; value: AgencyFilter }[] = [
   { label: "All", value: "ALL" },

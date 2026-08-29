@@ -10,10 +10,11 @@ import { SavedAnswers } from "@/components/SavedAnswers";
 import { Sidebar } from "@/components/Sidebar";
 import { SupportedAgencies } from "@/components/SupportedAgencies";
 import { askQuestion } from "@/lib/api";
+import { uploadAttachment } from "@/lib/attachments-api";
 import { DEFAULT_CHAT_TITLE, generateChatTitle, isMeaningfulMessage } from "@/lib/chat-title";
 import { clearHistory, createDraftChat, createMessageId, getChats, getLatestActiveChatId, saveChat, setLatestActiveChat } from "@/lib/history";
 import { getSavedAnswers, removeSavedAnswer, saveAnswer } from "@/lib/saved";
-import { ClarifyApiError, type ApiErrorKind, type ChatMessage, type ChatSession, type SavedAnswer } from "@/types/clarify";
+import { ClarifyApiError, type ApiErrorKind, type ChatMessage, type ChatSession, type SavedAnswer, type UploadedAttachment } from "@/types/clarify";
 
 type DashboardView = "chat" | "history";
 
@@ -29,6 +30,9 @@ export function Dashboard() {
   const [failedMessageId, setFailedMessageId] = useState<string | null>(null);
   const [focusedMessageId, setFocusedMessageId] = useState<string | null>(null);
   const [storageReady, setStorageReady] = useState(false);
+  const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const savedMessageIds = useMemo(() => new Set(savedAnswers.map((item) => item.messageId)), [savedAnswers]);
 
@@ -65,7 +69,7 @@ export function Dashboard() {
     setLoading(true);
     setErrorKind(null);
     try {
-      const response = await askQuestion({ chatId: chat.id, message: userMessage.content, messages: context });
+      const response = await askQuestion({ chatId: chat.id, message: userMessage.content, messages: context, attachmentIds: attachments.map((item) => item.attachment_id) });
       const now = new Date().toISOString();
       const assistantMessage: ChatMessage = {
         id: createMessageId(),
@@ -74,6 +78,8 @@ export function Dashboard() {
         agency: response.agency,
         status: response.status,
         citations: response.citations,
+        recommendedForms: response.recommended_forms,
+        suggestedFollowUps: response.suggested_follow_ups,
         createdAt: now,
       };
       const completedChat = { ...chat, messages: [...chat.messages, assistantMessage], updatedAt: now };
@@ -81,7 +87,9 @@ export function Dashboard() {
       persistChat(completedChat);
       setFailedMessageId(null);
     } catch (error) {
-      setErrorKind(error instanceof ClarifyApiError ? error.kind : "network");
+      const kind = error instanceof ClarifyApiError ? error.kind : "network";
+      setErrorKind(kind);
+      if (kind === "attachment_expired") setAttachments([]);
       setFailedMessageId(userMessage.id);
     } finally {
       setLoading(false);
@@ -93,7 +101,8 @@ export function Dashboard() {
     if (!clean || loading) return;
 
     const now = new Date().toISOString();
-    const userMessage: ChatMessage = { id: createMessageId(), role: "user", content: clean, createdAt: now };
+    const attachmentContext = attachments.map(({ document_type, agency, form_name, form_code }) => ({ document_type, agency, form_name, form_code }));
+    const userMessage: ChatMessage = { id: createMessageId(), role: "user", content: clean, attachmentContext: attachmentContext.length ? attachmentContext : undefined, createdAt: now };
     const shouldGenerateTitle = currentChat.title === DEFAULT_CHAT_TITLE && isMeaningfulMessage(clean);
     const chatWithQuestion: ChatSession = {
       ...currentChat,
@@ -126,6 +135,8 @@ export function Dashboard() {
     setFailedMessageId(null);
     setFocusedMessageId(null);
     setView("chat");
+    setAttachments([]);
+    setUploadError(null);
     if (currentChat.messages.length > 0) setCurrentChat(createDraftChat());
   }
 
@@ -137,6 +148,8 @@ export function Dashboard() {
     setFailedMessageId(null);
     setFocusedMessageId(messageId);
     setView("chat");
+    setAttachments([]);
+    setUploadError(null);
   }
 
   function toggleSavedAnswer(messageId: string) {
@@ -158,6 +171,7 @@ export function Dashboard() {
       answer: assistantMessage.content,
       agency: assistantMessage.agency ?? "UNCLEAR",
       citations: assistantMessage.citations ?? [],
+      recommendedForms: assistantMessage.recommendedForms ?? [],
       savedAt: new Date().toISOString(),
     };
     setSavedAnswers((items) => saveAnswer(items, saved));
@@ -177,6 +191,8 @@ export function Dashboard() {
     setFailedMessageId(null);
     setFocusedMessageId(null);
     setView("chat");
+    setAttachments([]);
+    setUploadError(null);
   }
 
   function clearConversationHistory() {
@@ -190,7 +206,31 @@ export function Dashboard() {
     setFailedMessageId(null);
     setFocusedMessageId(null);
     setView("chat");
+    setAttachments([]);
+    setUploadError(null);
   }
+
+  async function handleUpload(file: File) {
+    if (uploading || loading || attachments.length >= 3) return;
+    setUploading(true);
+    setUploadError(null);
+    setErrorKind(null);
+    try {
+      const uploaded = await uploadAttachment(file);
+      setAttachments((items) => [...items, uploaded]);
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : "The form could not be uploaded.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function removeAttachment(attachmentId: string) {
+    setAttachments((items) => items.filter((item) => item.attachment_id !== attachmentId));
+    setUploadError(null);
+  }
+
+  const needsReupload = attachments.length === 0 && currentChat.messages.some((message) => message.attachmentContext?.length);
 
   const navigationProps = {
     activeView: view,
@@ -209,7 +249,7 @@ export function Dashboard() {
             <DashboardHeader />
             <div id="chat" className="min-h-0 flex-1">
               {view === "chat" ? (
-                <ChatPanel chat={currentChat} query={query} loading={loading} errorKind={errorKind} focusedMessageId={focusedMessageId} savedMessageIds={savedMessageIds} onQueryChange={setQuery} onSubmit={submitMessage} onRetry={retryFailedMessage} onToggleSave={toggleSavedAnswer} onNewChat={startNewChat} />
+                <ChatPanel chat={currentChat} query={query} loading={loading} uploading={uploading} uploadError={uploadError} attachments={attachments} needsReupload={needsReupload} errorKind={errorKind} focusedMessageId={focusedMessageId} savedMessageIds={savedMessageIds} onQueryChange={setQuery} onSubmit={submitMessage} onRetry={retryFailedMessage} onToggleSave={toggleSavedAnswer} onNewChat={startNewChat} onUpload={handleUpload} onRemoveAttachment={removeAttachment} />
               ) : (
                 <HistoryView chats={chats} ready={storageReady} disabled={loading} onOpen={viewChat} onClear={clearConversationHistory} />
               )}

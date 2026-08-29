@@ -29,6 +29,21 @@
   english: "withdrawal"
   domain: "Withdrawals"
 
+"house":
+  formal: "pengeluaran membeli rumah pembelian rumah membina rumah"
+  english: "house purchase home purchase buy house build house housing withdrawal"
+  domain: "Housing withdrawals"
+
+"home":
+  formal: "pengeluaran membeli rumah pembelian rumah membina rumah"
+  english: "house purchase home purchase buy house build house housing withdrawal"
+  domain: "Housing withdrawals"
+
+"rumah":
+  formal: "pengeluaran membeli rumah pembelian rumah membina rumah"
+  english: "house purchase home purchase buy house build house housing withdrawal"
+  domain: "Housing withdrawals"
+
 "caruman":
   formal: "caruman KWSP"
   english: "EPF contribution"

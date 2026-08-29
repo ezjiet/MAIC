@@ -1,7 +1,12 @@
 # Python
 .venv/
+venv/
+env/
 __pycache__/
-*.pyc
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Environment variables
 .env*
@@ -9,7 +14,16 @@ __pycache__/
 !.env.local.example
 
 # AI / RAG data
-data/raw/
+data/raw/*
+!data/raw/lhdn/
+!data/raw/jpj/
+!data/raw/kwsp/
+data/raw/lhdn/*
+data/raw/jpj/*
+data/raw/kwsp/*
+!data/raw/lhdn/LHDN_Individual_Tax_Reliefs_YA_2025.txt
+!data/raw/jpj/JPJ_Competent_Driving_Licence_CDL_Renewal.txt
+!data/raw/kwsp/KWSP_What_Is_EPF_About_Us.txt
 data/chunks/
 data/forms/
 qdrant_storage/
@@ -19,8 +33,16 @@ models/
 web/node_modules/
 web/.next/
 web/out/
+web/next-env.d.ts
 *.tsbuildinfo
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime logs
+.logs/
+*.log
 
 # Editor
 .vscode/

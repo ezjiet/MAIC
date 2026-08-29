@@ -9,6 +9,11 @@
   english: "driving licence"
   domain: "Licence"
 
+"driving licence":
+  formal: "lesen memandu permohonan lesen memandu"
+  english: "driving licence driver licence application"
+  domain: "Licence"
+
 "road tax":
   formal: "cukai jalan"
   english: "road tax"

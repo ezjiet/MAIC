@@ -11,8 +11,8 @@ export function CitationCard({ citation }: { citation: Citation }) {
     <>
       <FileText className="size-3.5 shrink-0" aria-hidden="true" />
       <span className="truncate">{citation.document_title}</span>
-      {citation.clause && (
-        <span className="text-[10px] text-[#7a8a9e]">· {citation.clause}</span>
+      {citation.section && (
+        <span className="text-[10px] text-[#7a8a9e]">· {citation.section}</span>
       )}
       {hasLink && <ExternalLink className="size-3 shrink-0 text-[#7a8a9e]" aria-hidden="true" />}
     </>

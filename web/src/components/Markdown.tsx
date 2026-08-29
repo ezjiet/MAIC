@@ -11,7 +11,7 @@ import type { ReactNode } from "react";
  */
 
 // --- inline: bold / italic / code ------------------------------------------
-function renderInline(text: string): ReactNode[] {
+function renderInline(text: string, keyPrefix = "inline"): ReactNode[] {
   // Combined regex; order matters — code first so **bold** inside `code` doesn't recurse
   const tokenizer = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*\s][^*]*[^*\s]\*)/g;
   const out: ReactNode[] = [];
@@ -23,14 +23,14 @@ function renderInline(text: string): ReactNode[] {
     const tok = match[0];
     if (tok.startsWith("`")) {
       out.push(
-        <code key={`c${key++}`} className="rounded bg-[#f2f5f8] px-1 py-0.5 text-[0.9em] font-mono text-[#1f3a5c]">
+        <code key={`${keyPrefix}c${key++}`} className="rounded bg-[#f2f5f8] px-1 py-0.5 text-[0.9em] font-mono text-[#1f3a5c]">
           {tok.slice(1, -1)}
         </code>,
       );
     } else if (tok.startsWith("**")) {
-      out.push(<strong key={`b${key++}`} className="font-semibold text-[#0d2039]">{tok.slice(2, -2)}</strong>);
+      out.push(<strong key={`${keyPrefix}b${key++}`} className="font-semibold text-[#0d2039]">{tok.slice(2, -2)}</strong>);
     } else {
-      out.push(<em key={`i${key++}`}>{tok.slice(1, -1)}</em>);
+      out.push(<em key={`${keyPrefix}i${key++}`}>{tok.slice(1, -1)}</em>);
     }
     last = match.index + tok.length;
   }
@@ -44,7 +44,7 @@ function renderInlineWithBreaks(text: string, keyPrefix: string): ReactNode[] {
   const out: ReactNode[] = [];
   lines.forEach((line, i) => {
     if (i > 0) out.push(<br key={`${keyPrefix}br${i}`} />);
-    out.push(...renderInline(line));
+    out.push(...renderInline(line, `${keyPrefix}line${i}`));
   });
   return out;
 }

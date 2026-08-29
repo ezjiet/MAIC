@@ -1,75 +1,50 @@
-import type { AskQuestionInput, AskResponse, Agency, Citation } from "@/types/clarify";
+import { API_BASE_URL, resolveApiUrl } from "@/lib/api-base";
+import type { AskQuestionInput, AskResponse } from "@/types/clarify";
 import { ClarifyApiError } from "@/types/clarify";
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
-
-interface BackendCitation {
-  source: string;
-  page: number | null;
-  effective_date: string | null;
-  agency?: string;
-}
-
-interface BackendChatResponse {
-  agency: Agency;
-  answer: string;
-  citations: BackendCitation[];
-  refused: boolean;
-}
-
-function adaptCitation(c: BackendCitation): Citation {
-  const cleanTitle = c.source.replace(/\.pdf\.pdf$/, ".pdf").replace(/_/g, " ");
-  // Build a real, clickable URL to the PDF served by the backend at /pdfs/<agency>/<file>
-  const agency = (c.agency || "").toLowerCase();
-  const filename = encodeURIComponent(c.source);
-  const pageAnchor = c.page ? `#page=${c.page}` : "";
-  const url = agency ? `${BACKEND_URL}/pdfs/${agency}/${filename}${pageAnchor}` : "#";
-  return {
-    document_title: cleanTitle,
-    clause: c.page != null ? `Page ${c.page}` : "",
-    effective_date: c.effective_date || undefined,
-    source_url: url,
-  };
-}
 
 export async function askQuestion(input: AskQuestionInput): Promise<AskResponse> {
   const cleanQuery = input.message.trim();
-  if (!cleanQuery) {
-    throw new ClarifyApiError("malformed", "Please enter a question.");
-  }
+  if (!cleanQuery) throw new ClarifyApiError("malformed", "Please enter a question.");
 
-  // Pass previous chat history so the AI has multi-turn context
-  const history = (input.messages || []).slice(-8).map((m) => ({
-    role: m.role,
-    content: m.content,
-  }));
-
-  let resp: Response;
+  const history = input.messages.slice(-10).map(({ role, content }) => ({ role, content }));
+  let response: Response;
   try {
-    resp = await fetch(`${BACKEND_URL}/chat`, {
+    response = await fetch(`${API_BASE_URL}/ask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: cleanQuery, history }),
+      body: JSON.stringify({
+        conversation_id: input.chatId,
+        message: cleanQuery,
+        history,
+        attachments: (input.attachmentIds ?? []).map((attachment_id) => ({ attachment_id })),
+      }),
     });
-  } catch (e) {
-    throw new ClarifyApiError("network",
-      "Tak dapat sambung ke Clarify MY backend. Pastikan server berjalan di " + BACKEND_URL);
+  } catch {
+    throw new ClarifyApiError("network", `Could not connect to Clarify MY at ${API_BASE_URL}.`);
   }
 
-  if (!resp.ok) {
-    if (resp.status === 503) {
-      throw new ClarifyApiError("unavailable",
-        "AI servis sibuk sekejap. Cuba lagi dalam beberapa saat.");
-    }
-    throw new ClarifyApiError("unavailable", `Backend error (${resp.status}).`);
+  if (response.status === 410) {
+    throw new ClarifyApiError("attachment_expired", "That attachment is no longer available. Please upload it again.");
+  }
+  if (!response.ok) {
+    throw new ClarifyApiError("unavailable", response.status === 503
+      ? "The answer service is temporarily busy. Please try again shortly."
+      : `The service returned an error (${response.status}).`);
   }
 
-  const data: BackendChatResponse = await resp.json();
-
-  return {
-    answer: data.answer,
-    agency: data.agency,
-    status: data.refused ? "refused" : "answered",
-    citations: (data.citations || []).map(adaptCitation),
-  };
+  try {
+    const data = await response.json() as AskResponse;
+    return {
+      ...data,
+      citations: (data.citations ?? []).map((item) => ({ ...item, source_url: resolveApiUrl(item.source_url) ?? "#" })),
+      recommended_forms: (data.recommended_forms ?? []).map((item) => ({
+        ...item,
+        source_url: resolveApiUrl(item.source_url),
+        download_url: resolveApiUrl(item.download_url),
+      })),
+      suggested_follow_ups: data.suggested_follow_ups ?? [],
+    };
+  } catch {
+    throw new ClarifyApiError("malformed", "The response could not be read safely.");
+  }
 }

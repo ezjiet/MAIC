@@ -21,7 +21,13 @@ def build_agency(agency: str):
     if not chunks:
         print(f"[{agency}] no chunks, skipping")
         return
-    texts = [c["text"] for c in chunks]
+    # Candidate generation must see curated document titles as well as body text.
+    # This is especially important for short official guidance whose body may be
+    # in a different language from the user's query.
+    texts = [
+        f"{c.get('title')}. {c['text']}" if c.get("title") else c["text"]
+        for c in chunks
+    ]
 
     print(f"[{agency}] embedding {len(texts)} chunks...")
     vectors = model.encode(texts, show_progress_bar=True, normalize_embeddings=True, batch_size=8)

@@ -1,9 +1,8 @@
-import { Compass, FileEdit, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { Compass } from "lucide-react";
 import { AgencyBadge } from "@/components/AgencyBadge";
 import type { Agency } from "@/types/clarify";
 
-const topics: { label: string; prompt: string; agency: Exclude<Agency, "UNCLEAR"> }[] = [
+const topics: { label: string; prompt: string; agency: Exclude<Agency, "MULTI" | "UNCLEAR"> }[] = [
   { label: "Home Purchase", prompt: "Tell me about using KWSP savings for a home purchase.", agency: "KWSP" },
   { label: "Retirement Savings", prompt: "Tell me about KWSP retirement savings.", agency: "KWSP" },
   { label: "Income Tax", prompt: "Tell me about LHDN income tax.", agency: "LHDN" },
@@ -19,19 +18,6 @@ export function ExploreTopics({ disabled, onSelect }: { disabled: boolean; onSel
       <div className="border-b border-[#e8edf2] px-4 py-3">
         <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#7c8998]">What can I ask about?</p>
         <h2 id="explore-title" className="mt-1 flex items-center gap-2 text-sm font-extrabold text-[#10243e]"><Compass className="size-4 text-[#b48625]" aria-hidden="true" />Explore Topics</h2>
-      </div>
-      <div className="px-3 pt-3">
-        <Link href="/form" className="group flex items-center gap-3 rounded-xl border border-[#c5d8ec] bg-gradient-to-br from-[#eaf2fa] to-[#f6f9fc] p-3 transition hover:border-[#2b65a5] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28659c]">
-          <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#2b65a5] text-white shadow-sm">
-            <FileEdit className="size-5" aria-hidden="true" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#7a8a9e]">New</p>
-            <p className="text-[13px] font-extrabold text-[#10243e] leading-tight">Form Assistant</p>
-            <p className="text-[10.5px] text-[#52647a] leading-snug">Upload any KWSP / LHDN / JPJ form — AI fills it based on your info.</p>
-          </div>
-          <ArrowRight className="size-4 shrink-0 text-[#2b65a5] transition group-hover:translate-x-0.5" aria-hidden="true" />
-        </Link>
       </div>
       <ul className="grid min-h-0 flex-1 auto-rows-[76px] grid-cols-2 content-start gap-2 overflow-y-auto p-3">
         {topics.map((topic) => <li key={`${topic.agency}-${topic.label}`} className="h-full min-w-0"><button type="button" disabled={disabled} onClick={() => onSelect(topic.prompt)} aria-label={`Ask about ${topic.agency} ${topic.label}`} className="flex h-full w-full flex-col items-start justify-start gap-1.5 rounded-xl border border-[#e0e6ec] bg-[#fbfcfd] px-2.5 py-1.5 text-left transition hover:border-[#9eb4c8] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28659c] disabled:cursor-wait disabled:opacity-60"><AgencyBadge agency={topic.agency} /><span className="line-clamp-2 text-[10.5px] font-extrabold leading-[14px] text-[#213b55]">{topic.label}</span></button></li>)}

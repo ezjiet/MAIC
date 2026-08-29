@@ -13,7 +13,7 @@ import { faqSections, type FaqEntry } from "@/data/faq";
 import { agencyDetails } from "@/lib/agencies";
 import type { Agency } from "@/types/clarify";
 
-const supportedAgencies: Exclude<Agency, "UNCLEAR">[] = ["KWSP", "LHDN", "JPJ"];
+const supportedAgencies: Exclude<Agency, "MULTI" | "UNCLEAR">[] = ["KWSP", "LHDN", "JPJ"];
 
 export function FaqPage() {
   const router = useRouter();

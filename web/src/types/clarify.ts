@@ -1,11 +1,38 @@
-export type Agency = "KWSP" | "LHDN" | "JPJ" | "UNCLEAR";
+export type Agency = "KWSP" | "LHDN" | "JPJ" | "MULTI" | "UNCLEAR";
 export type AnswerStatus = "answered" | "refused";
 
 export interface Citation {
+  id: string | number;
   document_title: string;
-  clause: string;
+  section?: string;
   effective_date?: string;
   source_url: string;
+}
+
+export interface RecommendedForm {
+  form_id: string;
+  form_name: string;
+  form_code?: string;
+  agency: Exclude<Agency, "MULTI" | "UNCLEAR">;
+  reason?: string;
+  source_url?: string;
+  download_url?: string;
+}
+
+/** Safe descriptor persisted in chat history; never contains an upload ID or filename. */
+export interface AttachmentContext {
+  document_type?: string;
+  agency?: Agency;
+  form_name?: string;
+  form_code?: string;
+}
+
+/** Runtime-only upload state. Never pass this object to localStorage. */
+export interface UploadedAttachment extends AttachmentContext {
+  attachment_id: string;
+  filename: string;
+  content_type: string;
+  status: "ready";
 }
 
 export interface AskResponse {
@@ -13,6 +40,8 @@ export interface AskResponse {
   agency: Agency;
   status: AnswerStatus;
   citations: Citation[];
+  recommended_forms: RecommendedForm[];
+  suggested_follow_ups: string[];
 }
 
 export interface ChatMessage {
@@ -22,6 +51,9 @@ export interface ChatMessage {
   agency?: Agency;
   status?: AnswerStatus;
   citations?: Citation[];
+  attachmentContext?: AttachmentContext[];
+  recommendedForms?: RecommendedForm[];
+  suggestedFollowUps?: string[];
   createdAt: string;
 }
 
@@ -38,6 +70,8 @@ export interface AskQuestionInput {
   message: string;
   /** Persisted messages before the latest user message. */
   messages: ChatMessage[];
+  /** Opaque IDs retained only in memory for the current browser session. */
+  attachmentIds?: string[];
 }
 
 export interface SavedAnswer {
@@ -48,25 +82,11 @@ export interface SavedAnswer {
   answer: string;
   agency: Agency;
   citations: Citation[];
+  recommendedForms?: RecommendedForm[];
   savedAt: string;
 }
 
-export interface HistoryItem {
-  id: string;
-  query: string;
-  agency: Agency;
-  createdAt: string;
-  response?: AskResponse;
-}
-
-export interface FaqItem {
-  id: string;
-  question: string;
-  agency: Exclude<Agency, "UNCLEAR">;
-  askCount: string;
-}
-
-export type ApiErrorKind = "network" | "unavailable" | "malformed";
+export type ApiErrorKind = "network" | "unavailable" | "malformed" | "attachment_expired";
 
 export class ClarifyApiError extends Error {
   constructor(public readonly kind: ApiErrorKind, message: string) {

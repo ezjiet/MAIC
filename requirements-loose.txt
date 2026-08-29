@@ -25,4 +25,3 @@ rank-bm25~=0.2
 
 # --- PDF / documents ---
 pypdf~=6.16
-reportlab~=5.0

@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark, CircleHelp, FileEdit, History, Info, MessageSquareText } from "lucide-react";
+import { Bookmark, CircleHelp, History, Info, MessageSquareText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BrandLockup } from "@/components/BrandLockup";
 import { SupportedAgencies } from "@/components/SupportedAgencies";
@@ -9,19 +9,17 @@ export type NavigationView = "chat" | "history" | "saved" | "faq" | "about";
 
 const navItems = [
   { label: "Chat", icon: MessageSquareText, target: "chat" as NavigationView },
-  { label: "Form Assistant", icon: FileEdit, target: "form" as NavigationView | "form" },
   { label: "History", icon: History, target: "history" as NavigationView },
   { label: "Saved", icon: Bookmark, target: "saved" as NavigationView },
   { label: "FAQ", icon: CircleHelp, target: "faq" as NavigationView },
   { label: "About", icon: Info, target: "about" as NavigationView },
-] as ReadonlyArray<{ label: string; icon: typeof MessageSquareText; target: NavigationView | "form" }>;
+] as ReadonlyArray<{ label: string; icon: typeof MessageSquareText; target: NavigationView }>;
 
 export function Sidebar({ activeView, onOpenChat, onOpenHistory }: { activeView: NavigationView; onOpenChat: () => void; onOpenHistory: () => void }) {
   const router = useRouter();
 
   function navigate(label: string, target: NavigationView) {
     if (label === "Chat") onOpenChat();
-    else if (label === "Form Assistant") router.push("/form");
     else if (label === "History") onOpenHistory();
     else if (label === "Saved") router.push("/saved");
     else if (label === "FAQ") router.push("/faq");

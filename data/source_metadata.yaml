@@ -1,0 +1,40 @@
+lhdn:
+  LHDN_Individual_Tax_Reliefs_YA_2025.txt:
+    agency: LHDN
+    title: LHDN Individual Tax Reliefs — Year of Assessment 2025
+    document_type: guidance
+    source_url: https://www.hasil.gov.my/individu/pelepasan-cukai/
+    effective_date: "2026-06-26"
+    assessment_year: "2025"
+
+jpj:
+  JPJ_Competent_Driving_Licence_CDL_Renewal.txt:
+    agency: JPJ
+    title: Pembaharuan Lesen Memandu Kompeten (CDL)
+    document_type: guidance
+    source_url: https://www.jpj.gov.my/pusat-media-3/informasi-perkhidmatan-jpj/pemandu/pembaharuan-lesen-memandu-kompeten-cdl/
+
+kwsp:
+  KWSP_What_Is_EPF_About_Us.txt:
+    agency: KWSP
+    title: What Is EPF? — About Us
+    document_type: guidance
+    source_url: https://www.kwsp.gov.my/en/corporate/about-us
+
+  KWSP_9C_AHL_D5.pdf.pdf:
+    agency: KWSP
+    title: KWSP 9C (AHL) (D5) — Buy or Build Home Withdrawal
+    document_type: form
+    form_name: Borang Permohonan Pengeluaran Membeli / Membina Rumah
+    form_code: KWSP 9C (AHL) (D5)
+    source_url: https://www.kwsp.gov.my/documents/d/guest/kwsp_9c_ahl_d5-1
+    effective_date: "2026-07-01"
+
+  KWSP_9FA_(AHL)_BORANG_PERMOHONAN_PENGELUARAN_AKAUN_FLEKSIBEL.pdf.pdf:
+    agency: KWSP
+    title: KWSP 9FA (AHL) — Akaun Fleksibel Withdrawal Application
+    document_type: form
+    form_name: Borang Permohonan Pengeluaran Akaun Fleksibel
+    form_code: KWSP 9FA (AHL)
+    source_url: https://www.kwsp.gov.my/documents/d/guest/kwsp-9fa-ahl-_borang-permohonan-pengeluaran-akaun-fleksibel_25042024
+    effective_date: "2024-02-06"

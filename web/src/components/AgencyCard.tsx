@@ -2,7 +2,7 @@ import Image from "next/image";
 import { agencyDetails } from "@/lib/agencies";
 import type { Agency } from "@/types/clarify";
 
-export function AgencyCard({ agency, compact = false }: { agency: Exclude<Agency, "UNCLEAR">; compact?: boolean }) {
+export function AgencyCard({ agency, compact = false }: { agency: Exclude<Agency, "MULTI" | "UNCLEAR">; compact?: boolean }) {
   const detail = agencyDetails[agency];
 
   return (

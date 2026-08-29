@@ -3,7 +3,7 @@ import type { Agency, SavedAnswer } from "@/types/clarify";
 const STORAGE_KEY = "clarify-my-saved-answers-v2";
 const LEGACY_STORAGE_KEY = "clarify-my-saved-questions-v1";
 const LIMIT = 30;
-const agencies: Agency[] = ["KWSP", "LHDN", "JPJ", "UNCLEAR"];
+const agencies: Agency[] = ["KWSP", "LHDN", "JPJ", "MULTI", "UNCLEAR"];
 
 function isSavedAnswer(value: unknown): value is SavedAnswer {
   if (!value || typeof value !== "object") return false;
@@ -16,7 +16,8 @@ function isSavedAnswer(value: unknown): value is SavedAnswer {
     typeof item.answer === "string" &&
     typeof item.savedAt === "string" &&
     agencies.includes(item.agency as Agency) &&
-    Array.isArray(item.citations)
+    Array.isArray(item.citations) &&
+    (!item.recommendedForms || Array.isArray(item.recommendedForms))
   );
 }
 

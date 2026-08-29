@@ -96,16 +96,3 @@ def route(query: str) -> str:
     )
     label = (resp.text or "").strip().upper().split()[0] if resp.text else "UNCLEAR"
     return label if label in VALID else "UNCLEAR"
-
-if __name__ == "__main__":
-    tests = [
-        "hi", "hello", "hai", "apa khabar",
-        "fsfs", "asdfghjkl", "bhbhb", "nnnn", "aaa",
-        "boleh claim tax relief for parents medical?",
-        "Jual rumah kena CKHT ke?",
-        "macam mana withdraw akaun 2?",
-        "berapa road tax kereta 1.5cc?",
-        "what's the weather today",
-    ]
-    for q in tests:
-        print(f"{route(q):10s}  {q}")
