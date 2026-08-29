@@ -69,6 +69,24 @@ function sanitizeMessage(value: unknown): ChatMessage | null {
   };
 }
 
+function normalizeAttachmentDisplays(messages: ChatMessage[]): ChatMessage[] {
+  // Older sessions copied the same form marker onto every follow-up. Collapse
+  // only uninterrupted repeats; a normal user message allows a later upload
+  // of the same form to be shown as a new introduction.
+  let previousUserDisplay: string | null = null;
+  return messages.map((message) => {
+    if (message.role !== "user") return message;
+    if (!message.attachmentContext?.length) {
+      previousUserDisplay = null;
+      return message;
+    }
+    const signature = JSON.stringify(message.attachmentContext);
+    if (signature === previousUserDisplay) return { ...message, attachmentContext: undefined };
+    previousUserDisplay = signature;
+    return message;
+  });
+}
+
 function parseChatSession(value: unknown): ChatSession | null {
   if (!value || typeof value !== "object") return null;
   const chat = value as Partial<ChatSession>;
@@ -76,13 +94,14 @@ function parseChatSession(value: unknown): ChatSession | null {
       typeof chat.updatedAt !== "string" || !Array.isArray(chat.messages)) return null;
   const messages = chat.messages.map(sanitizeMessage);
   if (messages.some((message) => message === null)) return null;
-  const cleanMessages = messages as ChatMessage[];
+  const cleanMessages = normalizeAttachmentDisplays(messages as ChatMessage[]);
   return { id: chat.id, title: resolveStoredChatTitle(chat.title, cleanMessages), messages: cleanMessages,
     createdAt: chat.createdAt, updatedAt: chat.updatedAt };
 }
 
 function safeChatForStorage(chat: ChatSession): ChatSession {
-  return { ...chat, messages: chat.messages.map((message) => sanitizeMessage(message)).filter((message): message is ChatMessage => message !== null) };
+  const messages = chat.messages.map((message) => sanitizeMessage(message)).filter((message): message is ChatMessage => message !== null);
+  return { ...chat, messages: normalizeAttachmentDisplays(messages) };
 }
 
 export function createDraftChat(): ChatSession {

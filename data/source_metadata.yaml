@@ -21,7 +21,7 @@ kwsp:
     document_type: guidance
     source_url: https://www.kwsp.gov.my/en/corporate/about-us
 
-  KWSP_9C_AHL_D5.pdf.pdf:
+  KWSP_9C_AHL_D5.pdf:
     agency: KWSP
     title: KWSP 9C (AHL) (D5) — Buy or Build Home Withdrawal
     document_type: form
@@ -30,7 +30,7 @@ kwsp:
     source_url: https://www.kwsp.gov.my/documents/d/guest/kwsp_9c_ahl_d5-1
     effective_date: "2026-07-01"
 
-  KWSP_9FA_(AHL)_BORANG_PERMOHONAN_PENGELUARAN_AKAUN_FLEKSIBEL.pdf.pdf:
+  KWSP_9FA_(AHL)_BORANG_PERMOHONAN_PENGELUARAN_AKAUN_FLEKSIBEL.pdf:
     agency: KWSP
     title: KWSP 9FA (AHL) — Akaun Fleksibel Withdrawal Application
     document_type: form

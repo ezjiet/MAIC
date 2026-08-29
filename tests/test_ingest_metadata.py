@@ -7,7 +7,7 @@ from src.ingest import load_source_metadata, metadata_for_source, process_text
 class IngestMetadataTests(unittest.TestCase):
     def test_kwsp_9c_has_official_form_metadata(self):
         metadata = metadata_for_source(
-            Path("KWSP_9C_AHL_D5.pdf.pdf"), "kwsp", load_source_metadata()
+            Path("KWSP_9C_AHL_D5.pdf"), "kwsp", load_source_metadata()
         )
         self.assertEqual(metadata["agency"], "KWSP")
         self.assertEqual(metadata["document_type"], "form")

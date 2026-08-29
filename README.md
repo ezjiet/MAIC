@@ -353,7 +353,7 @@ Response shape:
       "agency": "KWSP",
       "reason": null,
       "source_url": "https://www.kwsp.gov.my/documents/d/guest/kwsp_9c_ahl_d5-1",
-      "download_url": "/pdfs/kwsp/KWSP_9C_AHL_D5.pdf.pdf"
+      "download_url": "/pdfs/kwsp/KWSP_9C_AHL_D5.pdf"
     }
   ],
   "suggested_follow_ups": [

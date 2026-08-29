@@ -19,7 +19,7 @@ export interface RecommendedForm {
   download_url?: string;
 }
 
-/** Safe descriptor persisted in chat history; never contains an upload ID or filename. */
+/** Safe display descriptor for the specific message that introduced a form. */
 export interface AttachmentContext {
   document_type?: string;
   agency?: Agency;
@@ -51,6 +51,7 @@ export interface ChatMessage {
   agency?: Agency;
   status?: AnswerStatus;
   citations?: Citation[];
+  /** Present only when this message introduced the displayed attachment. */
   attachmentContext?: AttachmentContext[];
   recommendedForms?: RecommendedForm[];
   suggestedFollowUps?: string[];
