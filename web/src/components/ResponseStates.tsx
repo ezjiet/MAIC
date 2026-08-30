@@ -1,4 +1,4 @@
-import { Bookmark, BookOpenCheck, CircleAlert, RefreshCw, Search, ShieldQuestion } from "lucide-react";
+import { Bookmark, CircleAlert, RefreshCw, Search, ShieldQuestion } from "lucide-react";
 import { AgencyBadge } from "@/components/AgencyBadge";
 import { CitationCard } from "@/components/CitationCard";
 import { Markdown } from "@/components/Markdown";
@@ -19,9 +19,9 @@ export function AnswerCard({ response, onFollowUp, saved = false, onToggleSave, 
     <article className="response-enter max-w-[92%] rounded-2xl rounded-tl-md border border-[#d8e4ef] bg-white p-4 shadow-[0_10px_25px_-23px_rgba(16,36,62,0.5)]">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          {response.citations.length > 0
-            ? <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#26814d]"><BookOpenCheck className="size-4" aria-hidden="true" />Grounded in official sources</span>
-            : <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b7788]"><CircleAlert className="size-4" aria-hidden="true" />General guidance — verify current details</span>}
+          {response.citations.length === 0 && (
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b7788]"><CircleAlert className="size-4" aria-hidden="true" />General guidance — verify current details</span>
+          )}
           <AgencyBadge agency={response.agency} />
         </div>
         {onToggleSave && <button type="button" onClick={onToggleSave} aria-pressed={saved} aria-label={saved ? "Saved — remove bookmark" : "Save answer"} title={saved ? "Saved" : "Save answer"} className={`grid size-8 shrink-0 place-items-center rounded-lg border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28659c] ${saved ? "border-[#b7cee2] bg-[#eaf2fa] text-[#174f83]" : "border-[#d9e1e8] bg-white text-[#718094] hover:bg-[#f4f7f9]"}`}><Bookmark className={`size-4 ${saved ? "fill-current" : ""}`} aria-hidden="true" /></button>}
