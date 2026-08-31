@@ -49,10 +49,6 @@ cp .env.example .env
 
 Then open `.env` in any text editor and replace `your_gemini_api_key_here` with the real key. It should look like:
 
-```
-GOOGLE_API_KEY=AQ.Ab8RN6LeClPnVbbsLp4phnmeuvQIAhP4AtzBmU4jsNZ70eLQhA
-```
-
 **Do not commit this file.** `.gitignore` already excludes it.
 
 ---
